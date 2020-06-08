@@ -1,0 +1,3 @@
+mySqlDatabase = ''
+mySqlPassword = ''
+CSVfileLocation = r''
