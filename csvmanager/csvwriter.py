@@ -32,12 +32,14 @@ while True:
 
     elif event =="SUBMIT":
         with open("data.csv", 'a') as csvfile:
+                values["MORTALITY"]="ALIVE"
                 w = csv.DictWriter(csvfile, values.keys())
                 if csvfile.tell() == 0:
                     w.writeheader()
                 w.writerow(values)
         for key in values.keys():
-            window[key]('')
+            if key is not "MORTALITY":
+                window[key]('')
         sg.popup("DATA SUBMITTED.")
 
 window.close()
