@@ -18,7 +18,7 @@ elements=[
 ]
 sg.popup("""The SYMPTOMS LIST and TIME LIST entries must be
 comma separated values that correspond with each other.
-If the patient has severe cough for the first 2 days, the
+If the patient has severe cough for the past 2 days, the
 first symptom entry must be "SEVERE COUGH" and the first
 TIME LIST entry must be "2 DAYS", without quotes for both.""")
 
