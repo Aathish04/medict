@@ -3,9 +3,12 @@ as well as write it to a MySql Database'''
 
 #necessary imports
 import csv
-from constants import mySqlDatabase,mySqlPassword,CSVfileLocation,mySqlHost,mySqlUsername
+import json
 import mysql.connector as ms
 from os import path
+
+from constants import mySqlDatabase,mySqlPassword,CSVfileLocation,mySqlHost,mySqlUsername
+
 
 def parseCSV(fp):
     rowsList=[]
@@ -35,9 +38,17 @@ def intialiseDataBase():
 
 
 def writeDatabase(columnNames,rows,tableName):
-    '''Write into MySsql table name as specified.'''
+    '''Write into MySql table name as specified.
+    columnNames -> List
+    rows ->List
+    tablesName ->str
+    '''
     intialiseDataBase()
+    sympIndex=columnNames.index('SYMPTOMS')
+    timesIndex=columnNames.index('TIMES')
     for row in rows[1:]: #1st row in columnName
+        row[sympIndex]=json.dumps([row[sympIndex]])
+        row[timesIndex]=json.dumps([row[timesIndex]])
         SQLStatement="INSERT INTO %s("%tableName
         for i in range(len(columnNames)):
             if i!=len(columnNames)-1:
@@ -57,6 +68,6 @@ def writeDatabase(columnNames,rows,tableName):
         print(SQLStatement)
         cursor.execute(SQLStatement)
         con.commit()
-        
-a=parseCSV(path.join(".","data.csv"))
-print(writeDatabase(tuple(a[0]),tuple(a),'patients'))
+if __name__== '__main__':
+    a=parseCSV(path.join(".","data.csv"))
+    print(writeDatabase(tuple(a[0]),tuple(a),'patients'))
