@@ -36,36 +36,7 @@ def records_from_csv():
 
 sg.theme('DarkTanBlue')
 
-form_layout=[
-    [sg.Text(
-        "AGE:",font=("serif",12)), sg.Input(key="AGE",font=("serif",12)
-        )],
-
-    [sg.Text(
-        "GENDER:",font=("serif",12)), sg.Input(key="GENDER",font=("serif",12)
-        )],
-
-    [
-        sg.Text(
-            "SYMPTOMS LIST:",font=("serif",12)),
-            sg.Input(key="SYMPTOMS",font=("serif",12)
-            ),
-        sg.Text(
-            "TIME LIST",font=("serif",12)),
-            sg.Input(key="TIMES",font=("serif",12)
-            )
-        ],
-
-    [
-        sg.Text("TEMPERATURE IN C:",font=("serif",12)),
-        sg.Input(key="TEMPERATURE",font=("serif",12))
-        ],
-
-    [
-        sg.Text("MEDICATION GIVEN:",font=("serif",12)),
-        sg.Input(key="MEDICATION",font=("serif",12))
-        ],
-
+info_layout=[
     [sg.Text("_"*180)],
     [sg.Text(INSTRUCTIONS,font=("serif",12))]
     ]
@@ -80,16 +51,38 @@ spread_layout=[
             )
         ],
         [
-            sg.Input(key="Change Entry",font=("serif",12)),sg.Button("Change Entry",key="change_entry")
-        ]
-]
-
+            sg.Frame(
+                "Form",[
+                [sg.Text("AGE:",font=("serif",12)), sg.Input(key="AGE",font=("serif",12))],
+                [sg.Text("GENDER:",font=("serif",12)),sg.Input(key="GENDER",font=("serif",12))],
+                [
+                    sg.Text("SYMPTOMS LIST:",font=("serif",12)),
+                    sg.Input(key="SYMPTOMS",font=("serif",12)),
+                    sg.Text("TIME LIST",font=("serif",12)),
+                    sg.Input(key="TIMES",font=("serif",12))
+                    ],
+                [sg.Text("TEMPERATURE IN C:",font=("serif",12)),sg.Input(key="TEMPERATURE",font=("serif",12))],
+                [
+                    sg.Text("MEDICATION GIVEN:",font=("serif",12)),sg.Input(key="MEDICATION",font=("serif",12)),
+                    ]
+                ]),
+            sg.Column(
+                [
+                    [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
+                    [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
+                    [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
+                    [sg.Button(button_text="DELETE ROW",button_color=("BLACK","RED"),size=(16,1))],
+                    [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
+                    ],
+                element_justification="center")
+                ]
+            ]
 layout=[ # Main Window layout
     [
         sg.TabGroup(
             [
                 [
-                    sg.Tab("Form",form_layout),
+                    sg.Tab("Info",info_layout),
 
                     sg.Tab(
                         "SpreadSheet",spread_layout,
@@ -99,10 +92,6 @@ layout=[ # Main Window layout
                 ],
             enable_events=True,key="tab"
             )
-        ],
-    [
-        sg.Button(button_text="SUBMIT",button_color=("black","green")),
-        sg.Button(button_text="CLEAR ALL",button_color=("black","RED"))
         ]
     ]
 
@@ -120,36 +109,44 @@ while True: #Main application loop.
         clear_data()
         table.update(values=records_from_csv())
 
-    elif event=="SUBMIT":
-        if values["tab"]=="SpreadSheet":
-            sg.popup("The SpreadSheet is read-only for now. Editing is coming!")
-        else:
-            with open("data.csv", 'a') as csvfile:
-                    data={
-                        e:values[e] for e in values if e in [
-                            "AGE","GENDER","SYMPTOMS",
-                            "TIMES","TEMPERATURE","MEDICATION"
-                            ]}
-                    data["MORTALITY"]="ALIVE"
-                    if not all(data.values()):
-                        sg.popup(UNFILLED_DATA_ERROR)
-                    else:
-                        w = csv.DictWriter(csvfile, data.keys())
-                        if csvfile.tell() == 0:
-                            w.writeheader()
-
-                        w.writerow(data)
-                        sg.popup("Data Submitted!")
-            clear_data()
-
-    elif event=="CLEAR ALL":
-        if values["tab"]=="SpreadSheet":
-            sg.popup("The SpreadSheet is read-only for now. Editing is coming!")
-        else:
-            clear_data()
-
     elif event=="table": #Table is clicked etc.
         print(table.SelectedRows)
+
+    elif event=="SUBMIT":
+        with open("data.csv", 'a') as csvfile:
+                data={
+                    e:values[e] for e in values if e in [
+                        "AGE","GENDER","SYMPTOMS",
+                        "TIMES","TEMPERATURE","MEDICATION"
+                        ]}
+                data["MORTALITY"]="ALIVE"
+                if not all(data.values()):
+                    sg.popup(UNFILLED_DATA_ERROR)
+                else:
+                    w = csv.DictWriter(csvfile, data.keys())
+                    if csvfile.tell() == 0:
+                        w.writeheader()
+
+                    w.writerow(data)
+                    sg.popup("Data Submitted!")
+        clear_data()
+        table.update(values=records_from_csv())
+
+    elif event=="RELOAD":
+        table.update(values=records_from_csv())
+
+    elif event=="CLEAR FILLED":
+        clear_data()
+
+    elif event=="DELETE ROW":
+        print("ROW DELETION")
+
+    elif event == "DELETE ALL ROWS":
+        confirm=sg.popup_yes_no("Are you sure you want to DELETE ALL ROWS?")
+        if confirm=="Yes":
+            firstline=open("data.csv", 'r').readline()
+            open("data.csv","w").write(firstline)
+        table.update(values=records_from_csv())
 
     else:
         print(event)
