@@ -22,6 +22,18 @@ def clear_data():
         if key in FIELDS:
             window[key]('')
 
+# NOTE: Might need to subclass the Dictreader to add some custom methods.
+csv_reader = csv.DictReader(open('data.csv', mode='r+'))
+
+# NOTE: This is one of those methods.
+def records_from_csv():
+    csv_reader = csv.DictReader(open('data.csv', mode='r+'))
+    return [
+        [
+            row[fieldname] for fieldname in csv_reader.fieldnames
+            ] for row in csv_reader
+        ]
+
 sg.theme('DarkTanBlue')
 
 form_layout=[
@@ -57,18 +69,6 @@ form_layout=[
     [sg.Text("_"*180)],
     [sg.Text(INSTRUCTIONS,font=("serif",12))]
     ]
-
-# NOTE: Might need to subclass the Dictreader to add some custom methods.
-csv_reader = csv.DictReader(open('data.csv', mode='r+'))
-
-# NOTE: This is one of those methods.
-def records_from_csv():
-    csv_reader = csv.DictReader(open('data.csv', mode='r+'))
-    return [
-        [
-            row[fieldname] for fieldname in csv_reader.fieldnames
-            ] for row in csv_reader
-        ]
 
 spread_layout=[
     [
@@ -149,7 +149,6 @@ while True: #Main application loop.
             clear_data()
 
     elif event=="table": #Table is clicked etc.
-        table.update(values=records_from_csv())
         print(table.SelectedRows)
 
     else:
