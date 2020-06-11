@@ -35,9 +35,7 @@ def records_from_csv():
 
 sg.theme('DarkTanBlue')
 
-info_layout=[
-    [sg.Text(INSTRUCTIONS,font=("serif",12))]
-    ]
+info_layout=[[sg.Text(INSTRUCTIONS,font=("serif",12))]]
 
 spread_layout=[
     [
@@ -48,34 +46,34 @@ spread_layout=[
             select_mode="extended",enable_events=True
             )
         ],
-        [
-            sg.Frame(
-                "Form",[
-                [sg.Text("AGE:",font=("serif",12)), sg.Input(key="AGE",font=("serif",12))],
-                [sg.Text("GENDER:",font=("serif",12)),sg.Input(key="GENDER",font=("serif",12))],
-                [
-                    sg.Text("SYMPTOMS LIST:",font=("serif",12)),
-                    sg.Input(key="SYMPTOMS",font=("serif",12)),
-                    sg.Text("TIME LIST:",font=("serif",12)),
-                    sg.Input(key="TIMES",font=("serif",12))
-                    ],
-                [sg.Text("TEMPERATURE IN C:",font=("serif",12)),sg.Input(key="TEMPERATURE",font=("serif",12))],
-                [
-                    sg.Text("MEDICATION GIVEN:",font=("serif",12)),sg.Input(key="MEDICATION",font=("serif",12)),
-                    ]
-                ]),
-            sg.Column(
-                [
-                    [sg.Checkbox('NEW ROW',key="NEW ROW",default=True,size=(16,2),background_color=("#0366fc"))],
-                    [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
-                    [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
-                    [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
-                    [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
-                    [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
-                    ],
-                element_justification="center")
+    [
+        sg.Frame(
+            "Form",[
+            [sg.Text("AGE:",font=("serif",12)), sg.Input(key="AGE",font=("serif",12))],
+            [sg.Text("GENDER:",font=("serif",12)),sg.Input(key="GENDER",font=("serif",12))],
+            [
+                sg.Text("SYMPTOMS LIST:",font=("serif",12)),
+                sg.Input(key="SYMPTOMS",font=("serif",12)),
+                sg.Text("TIME LIST:",font=("serif",12)),
+                sg.Input(key="TIMES",font=("serif",12))
+                ],
+            [sg.Text("TEMPERATURE IN C:",font=("serif",12)),sg.Input(key="TEMPERATURE",font=("serif",12))],
+            [
+                sg.Text("MEDICATION GIVEN:",font=("serif",12)),sg.Input(key="MEDICATION",font=("serif",12)),
                 ]
-            ]
+            ]),
+        sg.Column(
+            [
+                [sg.Checkbox('NEW ROW',key="NEW ROW",default=True,size=(16,2),background_color=("#0366fc"))],
+                [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
+                [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
+                [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
+                [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
+                [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
+                ],
+            element_justification="center")
+        ]
+    ]
 
 layout=[ # Main Window layout
     [
