@@ -95,7 +95,8 @@ layout=[ # Main Window layout
 
 table=spread_layout[0][0] # Just so the table can easily be referred to.
 
-window = sg.Window("Data Enterer", layout)
+window = sg.Window("Data Enterer", layout).Finalize()
+window.Maximize()
 
 while True: #Main application loop.
     event, values = window.read()
