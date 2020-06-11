@@ -7,7 +7,7 @@ import json
 import mysql.connector as ms
 from os import path
 
-from constants import mySqlDatabase,mySqlPassword,CSVfileLocation,mySqlHost,mySqlUsername
+from constants import mySqlDatabase,mySqlPassword,mySqlHost,mySqlUsername,SQLTableName
 
 
 def parseCSV(fp):
@@ -36,7 +36,25 @@ def intialiseDataBase():
     )
     cursor=con.cursor()
 
-
+def sql_to_list():
+    '''Converts things in sql database to lists which contain rows as tuples
+    Eg. 
+    [
+        (1, 51, 'MALE', '["FEVER, CHEST TIGHTNESS, DYSPNEA"]', '["8, 8, 8"]', Decimal('38.90'), 'ANTI-INFLAMMATORY', None)
+        (2, 20, 'FEMALE', '["DYSPNEA, DRY COUGH, FEVER"]', '["5, 5, 5"]', Decimal('38.50'), 'SELF:PARACETAMOL, AMOXILLIN', None)
+        (3, 90, 'FEMALE', '["DYSPNEA, DRY COUGH, DEVER"]', '["7+"]', Decimal('38.00'), 'MULTI-DRUG THERAPY, O2-THERAPY', None)
+        (4, 70, 'MALE', '["FEVER, DRY COUGH, DYSPNEA, CHEST PAIN"]', '["4, 4, 4, 4"]', Decimal('39.00'), 'MULTI-DRUG THERAPY, O2 THERAPY, INTUBATION, CPAP THERAPY', None)
+        (5, 57, 'MALE', '["DYSPNEA, DRY COUGH, FEVER"]', '["7, 7, 7"]', Decimal('38.50'), 'MULTI-DRUG THERAPY, O2-THERAPY', None)
+        (6, 51, 'MALE', '["FEVER, CHEST TIGHTNESS, DYSPNEA"]', '["8, 8, 8"]', Decimal('38.90'), 'ANTI-INFLAMMATORY', None)
+        (7, 20, 'FEMALE', '["DYSPNEA, DRY COUGH, FEVER"]', '["5, 5, 5"]', Decimal('38.50'), 'SELF:PARACETAMOL, AMOXILLIN', None)
+        (8, 90, 'FEMALE', '["DYSPNEA, DRY COUGH, DEVER"]', '["7+"]', Decimal('38.00'), 'MULTI-DRUG THERAPY, O2-THERAPY', None)
+        (9, 70, 'MALE', '["FEVER, DRY COUGH, DYSPNEA, CHEST PAIN"]', '["4, 4, 4, 4"]', Decimal('39.00'), 'MULTI-DRUG THERAPY, O2 THERAPY, INTUBATION, CPAP THERAPY', None)
+        (10, 57, 'MALE', '["DYSPNEA, DRY COUGH, FEVER"]', '["7, 7, 7"]', Decimal('38.50'), 'MULTI-DRUG THERAPY, O2-THERAPY', None)
+    ]
+    '''
+    intialiseDataBase()
+    cursor.execute("SELECT * from %s"%SQLTableName)
+    return cursor.fetchall()
 def writeDatabase(columnNames,rows,tableName):
     '''Write into MySql table name as specified.
     columnNames -> List
@@ -69,5 +87,6 @@ def writeDatabase(columnNames,rows,tableName):
         cursor.execute(SQLStatement)
         con.commit()
 if __name__== '__main__':
-    a=parseCSV(path.join(".","data.csv"))
-    print(writeDatabase(tuple(a[0]),tuple(a),'patients'))
+    #a=parseCSV(path.join(".","data.csv"))
+    #print(writeDatabase(tuple(a[0]),tuple(a),SQLTableName))
+    for i in sql_to_list(): print(i)
