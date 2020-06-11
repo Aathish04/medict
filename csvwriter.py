@@ -12,32 +12,30 @@ If the patient has severe cough for the past 2 days,\
 the first symptom entry must be "SEVERE COUGH" and the first
 TIME LIST entry must be "2", without quotes for both."""
 
+ROW_WARN="Are you ABSOLUTELY SURE you want to DELETE the selected row(s)?"
+
 UNFILLED_DATA_ERROR="Some (or all) fields were left empty. \
 Please use UNKNOWN as the entry if you don't know the data!"
 
-FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION"]
+FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
 def clear_data():
     for key in values.keys():
         if key in FIELDS:
             window[key]('')
 
-# NOTE: Might need to subclass the Dictreader to add some custom methods.
-csv_reader = csv.DictReader(open('data.csv', mode='r+'))
-
-# NOTE: This is one of those methods.
 def records_from_csv():
-    csv_reader = csv.DictReader(open('data.csv', mode='r+'))
-    return [
-        [
-            row[fieldname] for fieldname in csv_reader.fieldnames
-            ] for row in csv_reader
-        ]
+    with open('data.csv', mode='r') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        return [
+            [
+                row[fieldname] for fieldname in csv_reader.fieldnames
+                ] for row in csv_reader
+            ]
 
 sg.theme('DarkTanBlue')
 
 info_layout=[
-    [sg.Text("_"*180)],
     [sg.Text(INSTRUCTIONS,font=("serif",12))]
     ]
 
@@ -58,7 +56,7 @@ spread_layout=[
                 [
                     sg.Text("SYMPTOMS LIST:",font=("serif",12)),
                     sg.Input(key="SYMPTOMS",font=("serif",12)),
-                    sg.Text("TIME LIST",font=("serif",12)),
+                    sg.Text("TIME LIST:",font=("serif",12)),
                     sg.Input(key="TIMES",font=("serif",12))
                     ],
                 [sg.Text("TEMPERATURE IN C:",font=("serif",12)),sg.Input(key="TEMPERATURE",font=("serif",12))],
@@ -68,15 +66,17 @@ spread_layout=[
                 ]),
             sg.Column(
                 [
+                    [sg.Checkbox('NEW ROW',key="NEW ROW",default=True,size=(16,2),background_color=("#0366fc"))],
                     [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
                     [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
                     [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
-                    [sg.Button(button_text="DELETE ROW",button_color=("BLACK","RED"),size=(16,1))],
+                    [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
                     [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
                     ],
                 element_justification="center")
                 ]
             ]
+
 layout=[ # Main Window layout
     [
         sg.TabGroup(
@@ -110,10 +110,15 @@ while True: #Main application loop.
         table.update(values=records_from_csv())
 
     elif event=="table": #Table is clicked etc.
-        print(table.SelectedRows)
+        row=table.SelectedRows[-1]
+        for i in range(len(values.keys())):
+            key = list(values.keys())[i]
+            if key in list(FIELDS):
+                window[key](table.get()[row][i-1])
 
     elif event=="SUBMIT":
-        with open("data.csv", 'a') as csvfile:
+        if values["NEW ROW"]==True:
+            with open("data.csv", 'a') as csvfile:
                 data={
                     e:values[e] for e in values if e in [
                         "AGE","GENDER","SYMPTOMS",
@@ -126,9 +131,27 @@ while True: #Main application loop.
                     w = csv.DictWriter(csvfile, data.keys())
                     if csvfile.tell() == 0:
                         w.writeheader()
-
                     w.writerow(data)
-                    sg.popup("Data Submitted!")
+        else:
+            if table.SelectedRows!=[]:
+                new_rows=[]
+                with open("data.csv", "r") as csvfile:
+                    data=csv.DictReader(csvfile)
+                    datalist=[d for d in data]
+
+                for i in range(len(datalist)):
+                    if i in table.SelectedRows:
+                        for field in FIELDS:
+                            if field is not "MORTALITY":
+                                datalist[i][field]=values[field]
+                            else:
+                                datalist[i][field]="ALIVE"
+                with open("data.csv","w") as csvfile:
+                    writer=csv.DictWriter(csvfile,FIELDS)
+                    writer.writeheader()
+                    writer.writerows(datalist)
+            else:
+                sg.popup("No row(s) selected!")
         clear_data()
         table.update(values=records_from_csv())
 
@@ -138,8 +161,22 @@ while True: #Main application loop.
     elif event=="CLEAR FILLED":
         clear_data()
 
-    elif event=="DELETE ROW":
-        print("ROW DELETION")
+    elif event=="DELETE ROWS":
+        if table.SelectedRows != [] and sg.popup_yes_no(ROW_WARN)=="Yes":
+            rows_left=[]
+            with open("data.csv", "r") as csvfile:
+                data=csv.DictReader(csvfile)
+                datalist=[d for d in data]
+                for i in range(len(datalist)):
+                    if i not in table.SelectedRows:
+                        rows_left.append(datalist[i])
+            with open("data.csv","w") as csvfile:
+                writer=csv.DictWriter(csvfile,fieldnames=FIELDS)
+                writer.writeheader()
+                writer.writerows(rows_left)
+        elif table.SelectedRows == []:
+            sg.popup("No Rows have been selected!")
+        table.update(values=records_from_csv())
 
     elif event == "DELETE ALL ROWS":
         confirm=sg.popup_yes_no("Are you sure you want to DELETE ALL ROWS?")
