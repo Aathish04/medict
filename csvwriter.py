@@ -42,7 +42,7 @@ spread_layout=[
         sg.Table(
             values=records_from_csv(),headings=FIELDS,key="table",
             display_row_numbers=True,header_font=("serif",12),alternating_row_color="black",
-            auto_size_columns=False, def_col_width=20,size=[4*l for l in [16,9]],
+            auto_size_columns=False, def_col_width=20,size=[3*l for l in [16,9]],
             select_mode="extended",enable_events=True
             )
         ],
