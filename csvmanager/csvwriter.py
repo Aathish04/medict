@@ -24,11 +24,20 @@ TEXTFONT="serif"
 FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
 def clear_data():
+    """Clears all the unpushed data in the form.
+    """
     for key in values.keys():
         if key in FIELDS:
             window[key]('')
 
 def records_from_csv():
+    """Returns a list of (list of entries for each field)
+    for each row of the CSV file.
+
+    Returns:
+        list of lists: The outer list holds each row, the inner list holds
+                        each value in that row for each field.
+    """
     with open(CSVFILE, mode='r') as csvfile:
         csv_reader = csv.DictReader(csvfile)
         return [
@@ -36,6 +45,33 @@ def records_from_csv():
                 row[fieldname] for fieldname in csv_reader.fieldnames
                 ] for row in csv_reader
             ]
+
+def list_od_from_csv():
+    """Returns a list of ordered dictionaries that map each field to its value
+       for each row in the CSV file.
+
+    Returns:
+        list[OrderedDictionary]: List containing the ordered dictionaries that
+                                 map the field to their values, for each row.
+    """
+    with open(CSVFILE, "r") as csvfile:
+        data=csv.DictReader(csvfile)
+        datalist=[d for d in data]
+    return datalist
+
+def write_list_od_to_csv(list_of_ordered_dicts):
+    """Writes a list of ordered dictionaries that maps each field to its value
+       for a single row, to the CSV file.
+
+    Args:
+        list_of_ordered_dicts (list[OrderedDict]): The list containing the
+                        ordered dictionaries that map each field to its value.
+
+    """
+    with open(CSVFILE,"w") as csvfile:
+        writer=csv.DictWriter(csvfile,fieldnames=FIELDS)
+        writer.writeheader()
+        writer.writerows(list_of_ordered_dicts)
 
 sg.theme('DarkTanBlue')
 
@@ -120,39 +156,33 @@ while True: #Main event loop.
                 window[key](table.get()[row][i-1])
 
     elif event=="SUBMIT":
-        if values["NEW ROW"]==True:
-            with open(CSVFILE, 'a') as csvfile:
-                data={
-                    field:values[field] for field in values if field in FIELDS[:-1]
-                    }
-                data["MORTALITY"]="ALIVE"
-                if not all(data.values()):
-                    sg.popup(UNFILLED_DATA_ERROR)
-                else:
+        data={
+            field:values[field] for field in values if field in FIELDS[:-1]
+            }
+        if not all(data.values()):
+            sg.popup(UNFILLED_DATA_ERROR)
+        else:
+            if values["NEW ROW"]==True:
+                with open(CSVFILE, 'a') as csvfile:
+                    data["MORTALITY"]="ALIVE"
                     w = csv.DictWriter(csvfile, data.keys())
                     if csvfile.tell() == 0:
                         w.writeheader()
                     w.writerow(data)
-        else:
-            if table.SelectedRows!=[]:
-                new_rows=[]
-                with open(CSVFILE, "r") as csvfile:
-                    data=csv.DictReader(csvfile)
-                    datalist=[d for d in data]
-
-                for i in range(len(datalist)):
-                    if i in table.SelectedRows:
-                        for field in FIELDS:
-                            if field is not "MORTALITY":
-                                datalist[i][field]=values[field]
-                            else:
-                                datalist[i][field]="ALIVE"
-                with open(CSVFILE,"w") as csvfile:
-                    writer=csv.DictWriter(csvfile,FIELDS)
-                    writer.writeheader()
-                    writer.writerows(datalist)
             else:
-                sg.popup("No row(s) selected!")
+                if table.SelectedRows!=[]:
+                    new_rows=[]
+                    datalist=list_od_from_csv()
+                    for i in range(len(datalist)):
+                        if i in table.SelectedRows:
+                            for field in FIELDS:
+                                if field is not "MORTALITY":
+                                    datalist[i][field]=values[field]
+                                else:
+                                    datalist[i][field]="ALIVE"
+                    write_list_od_to_csv(datalist)
+                else:
+                    sg.popup("No row(s) selected!")
         clear_data()
         table.update(values=records_from_csv())
 
@@ -165,16 +195,11 @@ while True: #Main event loop.
     elif event=="DELETE ROWS":
         if table.SelectedRows != [] and sg.popup_yes_no(ROW_WARN)=="Yes":
             rows_left=[]
-            with open(CSVFILE, "r") as csvfile:
-                data=csv.DictReader(csvfile)
-                datalist=[d for d in data]
-                for i in range(len(datalist)):
-                    if i not in table.SelectedRows:
-                        rows_left.append(datalist[i])
-            with open(CSVFILE,"w") as csvfile:
-                writer=csv.DictWriter(csvfile,fieldnames=FIELDS)
-                writer.writeheader()
-                writer.writerows(rows_left)
+            datalist=list_od_from_csv()
+            for i in range(len(datalist)):
+                if i not in table.SelectedRows:
+                    rows_left.append(datalist[i])
+            write_list_od_to_csv(rows_left)
         elif table.SelectedRows == []:
             sg.popup("No Rows have been selected!")
         table.update(values=records_from_csv())
@@ -182,8 +207,10 @@ while True: #Main event loop.
     elif event == "DELETE ALL ROWS":
         confirm=sg.popup_yes_no("Are you sure you want to DELETE ALL ROWS?")
         if confirm=="Yes":
-            firstline=open(CSVFILE, 'r').readline()
-            open(CSVFILE,"w").write(firstline)
+            with open(CSVFILE, 'r') as csvfile:
+                firstline=csvfile.readline()
+            with open(CSVFILE,"w") as csvfile:
+                csvfile.write(firstline)
         table.update(values=records_from_csv())
 
     else:
