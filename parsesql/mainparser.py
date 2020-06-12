@@ -7,7 +7,7 @@ import json
 import mysql.connector as ms
 from os import path
 
-from constants import mySqlDatabase,mySqlPassword,mySqlHost,mySqlUsername,SQLTableName
+from .constants import mySqlDatabase,mySqlPassword,mySqlHost,mySqlUsername,SQLTableName
 
 
 def parseCSV(fp):
