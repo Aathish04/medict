@@ -6,6 +6,8 @@ import PySimpleGUI as sg
 
 os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
+CSVFILE="data.csv"
+
 INSTRUCTIONS="""The SYMPTOMS LIST and TIME LIST entries must be \
 comma separated values that correspond with each other.
 If the patient has severe cough for the past 2 days,\
@@ -17,6 +19,8 @@ ROW_WARN="Are you ABSOLUTELY SURE you want to DELETE the selected row(s)?"
 UNFILLED_DATA_ERROR="Some (or all) fields were left empty. \
 Please use UNKNOWN as the entry if you don't know the data!"
 
+TEXTFONT="serif"
+
 FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
 def clear_data():
@@ -25,7 +29,7 @@ def clear_data():
             window[key]('')
 
 def records_from_csv():
-    with open('data.csv', mode='r') as csvfile:
+    with open(CSVFILE, mode='r') as csvfile:
         csv_reader = csv.DictReader(csvfile)
         return [
             [
@@ -35,13 +39,13 @@ def records_from_csv():
 
 sg.theme('DarkTanBlue')
 
-info_layout=[[sg.Text(INSTRUCTIONS,font=("serif",12))]]
+info_layout=[[sg.Text(INSTRUCTIONS,font=(TEXTFONT,12))]]
 
 spread_layout=[
     [
         sg.Table(
             values=records_from_csv(),headings=FIELDS,key="table",
-            display_row_numbers=True,header_font=("serif",12),alternating_row_color="black",
+            display_row_numbers=True,header_font=(TEXTFONT,12),alternating_row_color="black",
             auto_size_columns=False, def_col_width=20,size=[3*l for l in [16,9]],
             select_mode="extended",enable_events=True
             )
@@ -49,17 +53,17 @@ spread_layout=[
     [
         sg.Frame(
             "Form",[
-            [sg.Text("AGE:",font=("serif",12)), sg.Input(key="AGE",font=("serif",12))],
-            [sg.Text("GENDER:",font=("serif",12)),sg.Input(key="GENDER",font=("serif",12))],
+            [sg.Text("AGE:",font=(TEXTFONT,12)), sg.Input(key="AGE",font=(TEXTFONT,12))],
+            [sg.Text("GENDER:",font=(TEXTFONT,12)),sg.Input(key="GENDER",font=(TEXTFONT,12))],
             [
-                sg.Text("SYMPTOMS LIST:",font=("serif",12)),
-                sg.Input(key="SYMPTOMS",font=("serif",12)),
-                sg.Text("TIME LIST:",font=("serif",12)),
-                sg.Input(key="TIMES",font=("serif",12))
+                sg.Text("SYMPTOMS LIST:",font=(TEXTFONT,12)),
+                sg.Input(key="SYMPTOMS",font=(TEXTFONT,12)),
+                sg.Text("TIME LIST:",font=(TEXTFONT,12)),
+                sg.Input(key="TIMES",font=(TEXTFONT,12))
                 ],
-            [sg.Text("TEMPERATURE IN C:",font=("serif",12)),sg.Input(key="TEMPERATURE",font=("serif",12))],
+            [sg.Text("TEMPERATURE IN C:",font=(TEXTFONT,12)),sg.Input(key="TEMPERATURE",font=(TEXTFONT,12))],
             [
-                sg.Text("MEDICATION GIVEN:",font=("serif",12)),sg.Input(key="MEDICATION",font=("serif",12)),
+                sg.Text("MEDICATION GIVEN:",font=(TEXTFONT,12)),sg.Input(key="MEDICATION",font=(TEXTFONT,12)),
                 ]
             ]),
         sg.Column(
@@ -98,7 +102,7 @@ table=spread_layout[0][0] # Just so the table can easily be referred to.
 window = sg.Window("Data Enterer", layout).Finalize()
 window.Maximize()
 
-while True: #Main application loop.
+while True: #Main event loop.
     event, values = window.read()
 
     if event in (None, 'Exit'):
@@ -117,12 +121,10 @@ while True: #Main application loop.
 
     elif event=="SUBMIT":
         if values["NEW ROW"]==True:
-            with open("data.csv", 'a') as csvfile:
+            with open(CSVFILE, 'a') as csvfile:
                 data={
-                    e:values[e] for e in values if e in [
-                        "AGE","GENDER","SYMPTOMS",
-                        "TIMES","TEMPERATURE","MEDICATION"
-                        ]}
+                    field:values[field] for field in values if field in FIELDS[:-1]
+                    }
                 data["MORTALITY"]="ALIVE"
                 if not all(data.values()):
                     sg.popup(UNFILLED_DATA_ERROR)
@@ -134,7 +136,7 @@ while True: #Main application loop.
         else:
             if table.SelectedRows!=[]:
                 new_rows=[]
-                with open("data.csv", "r") as csvfile:
+                with open(CSVFILE, "r") as csvfile:
                     data=csv.DictReader(csvfile)
                     datalist=[d for d in data]
 
@@ -145,7 +147,7 @@ while True: #Main application loop.
                                 datalist[i][field]=values[field]
                             else:
                                 datalist[i][field]="ALIVE"
-                with open("data.csv","w") as csvfile:
+                with open(CSVFILE,"w") as csvfile:
                     writer=csv.DictWriter(csvfile,FIELDS)
                     writer.writeheader()
                     writer.writerows(datalist)
@@ -163,13 +165,13 @@ while True: #Main application loop.
     elif event=="DELETE ROWS":
         if table.SelectedRows != [] and sg.popup_yes_no(ROW_WARN)=="Yes":
             rows_left=[]
-            with open("data.csv", "r") as csvfile:
+            with open(CSVFILE, "r") as csvfile:
                 data=csv.DictReader(csvfile)
                 datalist=[d for d in data]
                 for i in range(len(datalist)):
                     if i not in table.SelectedRows:
                         rows_left.append(datalist[i])
-            with open("data.csv","w") as csvfile:
+            with open(CSVFILE,"w") as csvfile:
                 writer=csv.DictWriter(csvfile,fieldnames=FIELDS)
                 writer.writeheader()
                 writer.writerows(rows_left)
@@ -180,8 +182,8 @@ while True: #Main application loop.
     elif event == "DELETE ALL ROWS":
         confirm=sg.popup_yes_no("Are you sure you want to DELETE ALL ROWS?")
         if confirm=="Yes":
-            firstline=open("data.csv", 'r').readline()
-            open("data.csv","w").write(firstline)
+            firstline=open(CSVFILE, 'r').readline()
+            open(CSVFILE,"w").write(firstline)
         table.update(values=records_from_csv())
 
     else:
