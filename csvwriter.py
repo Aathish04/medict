@@ -69,7 +69,7 @@ def write_list_od_to_csv(list_of_ordered_dicts):
 
     """
     with open(CSVFILE,"w") as csvfile:
-        writer=csv.DictWriter(csvfile,fieldnames=FIELDS)
+        writer=csv.DictWriter(csvfile,fieldnames=FIELDS,extrasaction="ignore")
         writer.writeheader()
         writer.writerows(list_of_ordered_dicts)
 
@@ -134,6 +134,7 @@ layout=[ # Main Window layout
     ]
 
 table=spread_layout[0][0] # Just so the table can easily be referred to.
+table.StartingRowNumber=1
 
 window = sg.Window("Data Enterer", layout).Finalize()
 window.Maximize()
