@@ -20,7 +20,7 @@ class CSVManager(object):
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self,TEXTFONT="serif",FONTSIZE=12):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=15,NUM_ROWS=20):
         """Initialises the CSV Manager.
 
         Args:
@@ -29,12 +29,13 @@ class CSVManager(object):
         """
         self.TEXTFONT=TEXTFONT
         self.FONTSIZE=FONTSIZE
+        self.NUM_ROWS=NUM_ROWS
         self.spread_layout=[
             [
                 sg.Table(
                     values=self.records_from_csv(),headings=self.FIELDS,key="csvtable",
                     display_row_numbers=True,header_font=(self.TEXTFONT,self.FONTSIZE),alternating_row_color="black",
-                    auto_size_columns=False, def_col_width=20,size=[3*l for l in [16,9]],
+                    auto_size_columns=False, def_col_width=20,size=(None,self.NUM_ROWS),
                     select_mode="extended",enable_events=True,font=(self.TEXTFONT,self.FONTSIZE)
                     )
                 ],
@@ -62,7 +63,7 @@ class CSVManager(object):
                         [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
                         [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
                         [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
-                        ],
+                        ],justification="right",
                     element_justification="center")
                 ]
             ]
