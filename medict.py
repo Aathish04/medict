@@ -1,6 +1,10 @@
 import os
 import csv
-import PySimpleGUI as sg
+try:
+    import PySimpleGUI as sg
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
+
 from csvwriter import CSVManager
 
 if __name__=="__main__":
