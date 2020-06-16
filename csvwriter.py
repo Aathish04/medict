@@ -18,34 +18,40 @@ class CSVManager(object):
     UNFILLED_DATA_ERROR="Some (or all) fields were left empty. \
     Please use UNKNOWN as the entry if you don't know the data!"
 
-    TEXTFONT="serif"
-
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=12):
+        """Initialises the CSV Manager.
+
+        Args:
+            TEXTFONT (str, optional): The font to use for all text. Defaults to 12.
+            FONTSIZE (int, optional): The fontsize to use for all text. Defaults to "serif".
+        """
+        self.TEXTFONT=TEXTFONT
+        self.FONTSIZE=FONTSIZE
         self.spread_layout=[
             [
                 sg.Table(
                     values=self.records_from_csv(),headings=self.FIELDS,key="csvtable",
-                    display_row_numbers=True,header_font=(self.TEXTFONT,12),alternating_row_color="black",
+                    display_row_numbers=True,header_font=(self.TEXTFONT,self.FONTSIZE),alternating_row_color="black",
                     auto_size_columns=False, def_col_width=20,size=[3*l for l in [16,9]],
-                    select_mode="extended",enable_events=True
+                    select_mode="extended",enable_events=True,font=(self.TEXTFONT,self.FONTSIZE)
                     )
                 ],
             [
                 sg.Frame(
                     "Form",[
-                    [sg.Text("AGE:",font=(self.TEXTFONT,12)), sg.Input(key="AGE",font=(self.TEXTFONT,12))],
-                    [sg.Text("GENDER:",font=(self.TEXTFONT,12)),sg.Input(key="GENDER",font=(self.TEXTFONT,12))],
+                    [sg.Text("AGE:",font=(self.TEXTFONT,self.FONTSIZE)), sg.Input(key="AGE",font=(self.TEXTFONT,self.FONTSIZE))],
+                    [sg.Text("GENDER:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="GENDER",font=(self.TEXTFONT,self.FONTSIZE))],
                     [
-                        sg.Text("SYMPTOMS LIST:",font=(self.TEXTFONT,12)),
-                        sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,12)),
-                        sg.Text("TIME LIST:",font=(self.TEXTFONT,12)),
-                        sg.Input(key="TIMES",font=(self.TEXTFONT,12))
+                        sg.Text("SYMPTOMS LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
+                        sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,self.FONTSIZE)),
+                        sg.Text("TIME LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
+                        sg.Input(key="TIMES",font=(self.TEXTFONT,self.FONTSIZE))
                         ],
-                    [sg.Text("TEMPERATURE IN C:",font=(self.TEXTFONT,12)),sg.Input(key="TEMPERATURE",font=(self.TEXTFONT,12))],
+                    [sg.Text("TEMPERATURE IN C:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="TEMPERATURE",font=(self.TEXTFONT,self.FONTSIZE))],
                     [
-                        sg.Text("MEDICATION GIVEN:",font=(self.TEXTFONT,12)),sg.Input(key="MEDICATION",font=(self.TEXTFONT,12)),
+                        sg.Text("MEDICATION GIVEN:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="MEDICATION",font=(self.TEXTFONT,self.FONTSIZE)),
                         ]
                     ]),
                 sg.Column(
@@ -205,7 +211,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
 
     csvmanager=CSVManager()
 
-    info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
+    info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,csvmanager.FONTSIZE))]]
     layout=[ # Main Window layout
         [
             sg.TabGroup(
