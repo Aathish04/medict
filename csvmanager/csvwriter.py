@@ -89,7 +89,7 @@ class CSVManager(object):
             list of lists: The outer list holds each row, the inner list holds
                             each value in that row for each field.
         """
-        with open(self.CSVFILE, mode='r') as csvfile:
+        with open(self.CSVFILE,'r') as csvfile:
             csv_reader = csv.DictReader(csvfile)
             return [
                 [
