@@ -26,7 +26,7 @@ class CSVManager(object):
         self.spread_layout=[
             [
                 sg.Table(
-                    values=self.records_from_csv(),headings=self.FIELDS,key="table",
+                    values=self.records_from_csv(),headings=self.FIELDS,key="csvtable",
                     display_row_numbers=True,header_font=(self.TEXTFONT,12),alternating_row_color="black",
                     auto_size_columns=False, def_col_width=20,size=[3*l for l in [16,9]],
                     select_mode="extended",enable_events=True
@@ -237,7 +237,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
             csvmanager.clear_data()
             csvmanager.reload_table()
 
-        elif event=="table": #Table is clicked etc.
+        elif event=="csvtable": #Table is clicked etc.
             row=csvmanager.table.SelectedRows[-1]
             for i in range(len(values.keys())):
                 key = list(values.keys())[i]

@@ -41,7 +41,7 @@ if __name__=="__main__":
             csvmanager.clear_data(locals())
             csvmanager.reload_table()
 
-        elif event=="table": #Table is clicked etc.
+        elif event=="csvtable": #Table is clicked etc.
             row=csvmanager.table.SelectedRows[-1]
             for i in range(len(values.keys())):
                 key = list(values.keys())[i]
