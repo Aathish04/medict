@@ -5,7 +5,6 @@ import csv
 import PySimpleGUI as sg
 
 class CSVManager(object):
-    CSVFILE="data.csv"
 
     INSTRUCTIONS="""The SYMPTOMS LIST and TIME LIST entries must be \
     comma separated values that correspond with each other.
@@ -20,17 +19,20 @@ class CSVManager(object):
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self,TEXTFONT="serif",FONTSIZE=15,NUM_ROWS=20):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=12,NUM_ROWS=20,CSVFILE="data.csv"):
         """Initialises the CSV Manager.
 
         Args:
             TEXTFONT (str, optional): The font to use for all text. Defaults to 12.
             FONTSIZE (int, optional): The fontsize to use for all text. Defaults to "serif".
             NUM_ROWS (int, optional): The number of rows to display in the Table. Defaults to 20
+            CSVFILE (str, optional): The path (relative or full) to the csv file to read from.
+            Defaults to "data.csv" in the same directory as the importing script.
         """
         self.TEXTFONT=TEXTFONT
         self.FONTSIZE=FONTSIZE
         self.NUM_ROWS=NUM_ROWS
+        self.CSVFILE=CSVFILE
         self.spread_layout=[
             [
                 sg.Table(
@@ -204,7 +206,7 @@ class CSVManager(object):
                 if i not in self.table.SelectedRows:
                     rows_left.append(datalist[i])
             self.write_list_od_to_csv(rows_left)
-        elif table.SelectedRows == []:
+        elif self.table.SelectedRows == []:
             sg.popup("No Rows have been selected!")
         self.reload_table()
 
@@ -223,7 +225,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
-    csvmanager=CSVManager()
+    csvmanager=CSVManager(CSVFILE="../data.csv")
 
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,csvmanager.FONTSIZE))]]
     layout=[ # Main Window layout
