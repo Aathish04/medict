@@ -26,6 +26,7 @@ class CSVManager(object):
         Args:
             TEXTFONT (str, optional): The font to use for all text. Defaults to 12.
             FONTSIZE (int, optional): The fontsize to use for all text. Defaults to "serif".
+            NUM_ROWS (int, optional): The number of rows to display in the Table.
         """
         self.TEXTFONT=TEXTFONT
         self.FONTSIZE=FONTSIZE
