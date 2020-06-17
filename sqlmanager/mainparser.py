@@ -65,7 +65,8 @@ def sql_to_list():
     '''
     intialise_dataBase()
     cursor.execute("SELECT * from %s"%SQLTableName)
-    return cursor.fetchall()
+    items = cursor.fetchall()
+    return [[item for item in row]for row in items]
 
 def create_table():
     intialise_dataBase()
@@ -117,8 +118,8 @@ def write_database(columnNames,rows):
         con.commit()
 
 if __name__== '__main__':
-    a=parseCSV(path.join("..","data.csv"))
-    print(write_database(tuple(a[0]),tuple(a)))
-    for i in sql_to_list(): print(i)
+    #a=parseCSV(path.join("..","data.csv"))
+    #print(write_database(tuple(a[0]),tuple(a)))
+    print(sql_to_list())
     #write_database(columnNames,rows)
-    print(show_table_rows())
+    #print(show_table_rows())
