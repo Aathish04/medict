@@ -40,6 +40,16 @@ class CSVManager(object):
                     )
                 ],
             [
+                sg.Column(
+                    [
+                        [sg.Button(button_text="UPLOAD TO CLOUD",button_color=("white","blue"),size=(18,1))],
+                        [sg.Button(button_text="USE CLOUD BACKUP",button_color=("blue","white"),size=(18,1))],
+                        [sg.Button(button_text="VIEW SCANS",button_color=("white","purple"),size=(18,1))],
+                        [sg.Button(button_text="ADD SCANS",button_color=("purple","white"),size=(18,1))]
+                        ],justification="left",
+
+                    element_justification="center"),
+
                 sg.Frame(
                     "Form",[
                     [sg.Text("AGE:",font=(self.TEXTFONT,self.FONTSIZE)), sg.Input(key="AGE",font=(self.TEXTFONT,self.FONTSIZE))],
@@ -65,10 +75,12 @@ class CSVManager(object):
                         [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
                         ],justification="right",
                     element_justification="center")
+
                 ]
             ]
         self.table=self.spread_layout[0][0]
         self.table.StartingRowNumber=1
+        self.table.RowHeaderText="ID"
 
     def clear_data(self, local_variables=None):
         """Clears all the unpushed data filled in the form.
