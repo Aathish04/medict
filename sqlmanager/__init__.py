@@ -1,2 +1,1 @@
-from .mainparser import *
-from .constants import *
+from .sqlview import SQLManager

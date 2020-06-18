@@ -11,6 +11,7 @@ from constants import mySqlDatabase,mySqlPassword,mySqlHost,mySqlUsername,SQLTab
 
 
 def parseCSV(fp):
+    '''Parse csv file in `fp` and convert to lists'''
     rowsList=[]
     with open(fp,'r',encoding='utf-8') as data:
         reader = csv.reader(data,dialect='excel')
@@ -19,6 +20,7 @@ def parseCSV(fp):
     return rowsList
 
 def is_num(var):
+    '''Check whether the `var` is a number or not using actual conversion'''
     try:
         var=int(var)
         return True
@@ -37,6 +39,7 @@ def intialise_dataBase():
     cursor=con.cursor()
 
 def checkTableExists(tablename='patients'):
+    '''Check whether the table `tablenames` already exits'''
     intialise_dataBase()
     cursor.execute("""
         SELECT COUNT(*)
@@ -66,9 +69,24 @@ def sql_to_list():
     intialise_dataBase()
     cursor.execute("SELECT * from %s"%SQLTableName)
     items = cursor.fetchall()
-    return [[item for item in row]for row in items]
+    tempItems = []
+    finalItems = []
+    for item in items:
+        for things in item:
+            if type(things) == str:
+                if '[' in things:
+                    things = json.loads(str(things))
+            if type(things) == list:
+                tempItems.append(str(things)[2:-2])
+            else:
+                tempItems.append(str(things))
+        else:
+            finalItems.append(tempItems)
+            tempItems=[]
+    return finalItems
 
 def create_table():
+    '''This create a table defined in `database.sql`'''
     intialise_dataBase()
     with open(path.join('..','database.sql'),'r') as f:
         SQLStatement=f.read()
@@ -118,8 +136,8 @@ def write_database(columnNames,rows):
         con.commit()
 
 if __name__== '__main__':
-    #a=parseCSV(path.join("..","data.csv"))
-    #print(write_database(tuple(a[0]),tuple(a)))
+    '''This is to test some functions'''
+    a=parseCSV(path.join("..","data.csv"))
+    print(write_database(tuple(a[0]),tuple(a)))
     print(sql_to_list())
-    #write_database(columnNames,rows)
-    #print(show_table_rows())
+    print(show_table_rows())
