@@ -3,15 +3,15 @@
 
 import os
 import PySimpleGUI as sg
-import mainparser as parsesql
+import sqlmain as parsesql
 
 class SQLManager(object):
-    CSVFILE="data.csv"
+    CSVFILE=os.path.join("..","data.csv")
     def __init__(self,TEXTFONT="serif",FONTSIZE=15,NUM_ROWS=20):
         """Initialises the SQL Manager.
 
         Args:
-            TEXTFONT (str, optional): The font to use for all text. Defaults to 12.
+            TEXTFONT (str, optional): The font to use for all text. Defaults to 15.
             FONTSIZE (int, optional): The fontsize to use for all text. Defaults to "serif".
             NUM_ROWS (int, optional): The number of rows to display in the Table. Defaults to 20
         """
@@ -31,24 +31,25 @@ class SQLManager(object):
             [
                 sg.Column(
                     [
-                        [sg.Button(button_text="COMPARE WITH CSV",button_color=("white","blue"),size=(18,1))],
-                        ],justification="center",
+                        [sg.Button(button_text="COM`PARE WITH CSV",button_color=("white","blue"),size=(18,1))],
+                        [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
+                        ],
+                        justification="center",
                     element_justification="center"),
-
+                    ]
                 ]
-            ]
         self.table=self.spread_layout[0][0]
         self.table.StartingRowNumber=1
         self.table.RowHeaderText="ID"
     def reload_table(self):
-        """Reloads the table by reading the CSV file and updating as necessary.
+        """Reloads the table by reading the Database and updating as necessary.
         """
         self.table.update(values=parsesql.sql_to_list())
 if __name__=="__main__": #For if you want to run this standalone to edit quickly.
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
     info_layout=[[sg.Text("Hi")]]
-    sqlmanager=SQLManager()
+    sqlmanager=SQLManager(TEXTFONT="Roboto Regular")
     layout=[ # Main Window layout
         [
             sg.TabGroup(
@@ -74,17 +75,14 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
         event, values = window.read()
 
         if event in (None, 'Exit'):
+            print("Exiting")
             break
 
         elif event=="tab":
             sqlmanager.reload_table()
-
-        elif event=="sqltable": #Table is clicked etc.
-            row=sqlmanager.table.SelectedRows[-1]
-            for i in range(len(values.keys())):
-                key = list(values.keys())[i]
-                if key in list(sqlmanager.FIELDS):
-                    window[key](sqlmanager.table.get()[row][i-1])
+        elif event=="RELOAD":
+            sqlmanager.reload_table()
+            print("Reloaded")
         else:
             print(event)
 
