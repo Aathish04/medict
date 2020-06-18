@@ -11,7 +11,7 @@ if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
-    csvmanager=CSVManager()
+    csvmanager=CSVManager(FONTSIZE=15)
 
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
@@ -32,8 +32,10 @@ if __name__=="__main__":
             ]
         ]
 
-    window = sg.Window("Medict", layout).Finalize()
-    window.Maximize()
+    window = sg.Window("Medict", layout,resizable=True,finalize=True)
+    window.maximize()
+    window["tab"].expand(True,True,True)
+
 
     while True: #Main event loop.
         event, values = window.read()
