@@ -12,6 +12,7 @@ def get_screen_size():
     tempwindow.Maximize()
     size=tempwindow.size
     tempwindow.close()
+    del tempwindow
     return size
 
 if __name__=="__main__":
