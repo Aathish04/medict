@@ -37,48 +37,53 @@ class CSVManager(object):
             [
                 sg.Table(
                     values=self.records_from_csv(),headings=self.FIELDS,key="csvtable",
-                    display_row_numbers=True,header_font=(self.TEXTFONT,self.FONTSIZE),alternating_row_color="black",
-                    auto_size_columns=False, def_col_width=20,size=(None,self.NUM_ROWS),
-                    select_mode="extended",enable_events=True,font=(self.TEXTFONT,self.FONTSIZE)
+                    display_row_numbers=True,header_font=(self.TEXTFONT,self.FONTSIZE),
+                    alternating_row_color="black", auto_size_columns=False,
+                    def_col_width=20,size=(None,self.NUM_ROWS), select_mode="extended",
+                    enable_events=True,font=(self.TEXTFONT,self.FONTSIZE),justification="center"
                     )
                 ],
             [
-                sg.Column(
-                    [
-                        [sg.Button(button_text="UPLOAD TO CLOUD",button_color=("white","blue"),size=(18,1))],
-                        [sg.Button(button_text="USE CLOUD BACKUP",button_color=("blue","white"),size=(18,1))],
-                        [sg.Button(button_text="VIEW SCANS",button_color=("white","purple"),size=(18,1))],
-                        [sg.Button(button_text="ADD SCANS",button_color=("purple","white"),size=(18,1))]
-                        ],justification="left",
+                sg.Frame("Form",
+                    [[
+                        sg.Column(
+                            [
+                                [sg.Button(button_text="UPLOAD TO CLOUD",button_color=("white","blue"),size=(18,1))],
+                                [sg.Button(button_text="USE CLOUD BACKUP",button_color=("blue","white"),size=(18,1))],
+                                [sg.Button(button_text="VIEW SCANS",button_color=("white","purple"),size=(18,1))],
+                                [sg.Button(button_text="ADD SCANS",button_color=("purple","white"),size=(18,1))]
+                                ],justification="left",
 
-                    element_justification="center"),
+                            element_justification="center"),
 
-                sg.Frame(
-                    "Form",[
-                    [sg.Text("AGE:",font=(self.TEXTFONT,self.FONTSIZE)), sg.Input(key="AGE",font=(self.TEXTFONT,self.FONTSIZE))],
-                    [sg.Text("GENDER:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="GENDER",font=(self.TEXTFONT,self.FONTSIZE))],
-                    [
-                        sg.Text("SYMPTOMS LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
-                        sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,self.FONTSIZE)),
-                        sg.Text("TIME LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
-                        sg.Input(key="TIMES",font=(self.TEXTFONT,self.FONTSIZE))
-                        ],
-                    [sg.Text("TEMPERATURE IN C:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="TEMPERATURE",font=(self.TEXTFONT,self.FONTSIZE))],
-                    [
-                        sg.Text("MEDICATION GIVEN:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="MEDICATION",font=(self.TEXTFONT,self.FONTSIZE)),
-                        ]
-                    ]),
-                sg.Column(
-                    [
-                        [sg.Checkbox('NEW ROW',key="NEW ROW",default=True,size=(16,2),background_color=("#0366fc"))],
-                        [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
-                        [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
-                        [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
-                        [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
-                        [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
-                        ],justification="right",
-                    element_justification="center")
+                        sg.Frame(
+                            "Data",[
+                            [sg.Text("AGE:",font=(self.TEXTFONT,self.FONTSIZE)), sg.Input(key="AGE",font=(self.TEXTFONT,self.FONTSIZE))],
+                            [sg.Text("GENDER:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="GENDER",font=(self.TEXTFONT,self.FONTSIZE))],
+                            [
+                                sg.Text("SYMPTOMS LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
+                                sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,self.FONTSIZE)),
+                                sg.Text("TIME LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
+                                sg.Input(key="TIMES",font=(self.TEXTFONT,self.FONTSIZE))
+                                ],
+                            [sg.Text("TEMPERATURE IN C:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="TEMPERATURE",font=(self.TEXTFONT,self.FONTSIZE))],
+                            [
+                                sg.Text("MEDICATION GIVEN:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="MEDICATION",font=(self.TEXTFONT,self.FONTSIZE)),
+                                ]
+                            ]),
 
+                        sg.Column(
+                            [
+                                [sg.Checkbox('NEW ROW',key="NEW ROW",default=True,size=(16,2),background_color=("#0366fc"))],
+                                [sg.Button(button_text="SUBMIT",button_color=("black","green"),size=(16,1))],
+                                [sg.Button(button_text="RELOAD",button_color=("black","WHITE"),size=(16,1))],
+                                [sg.Button(button_text="CLEAR FILLED",button_color=("RED","WHITE"),size=(16,1))],
+                                [sg.Button(button_text="DELETE ROWS",button_color=("BLACK","RED"),size=(16,1))],
+                                [sg.Button(button_text="DELETE ALL ROWS",button_color=("red","black"),size=(16,1))],
+                                ],justification="right",
+                            element_justification="center")
+                        ]]
+                    )
                 ]
             ]
         self.table=self.spread_layout[0][0]
@@ -246,7 +251,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
             ]
         ]
 
-    window = sg.Window("Data Enterer", layout).Finalize()
+    window = sg.Window("Data Enterer", layout,resizeable=True).finalize()
     window.Maximize()
 
     while True: #Main event loop.
