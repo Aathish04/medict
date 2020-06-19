@@ -19,9 +19,9 @@ class CSVManager(object):
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self,TEXTFONT="serif",FONTSIZE=12,NUM_ROWS=20,CSVFILE="data.csv"):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=14,NUM_ROWS=20,CSVFILE="data.csv"):
         """Initialises the CSV Manager.
-
+            Good fontsizes are [12,21]
         Args:
             TEXTFONT (str, optional): The font to use for all text. Defaults to 12.
             FONTSIZE (int, optional): The fontsize to use for all text. Defaults to "serif".
@@ -62,14 +62,15 @@ class CSVManager(object):
                             [sg.Text("GENDER:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="GENDER",font=(self.TEXTFONT,self.FONTSIZE))],
                             [
                                 sg.Text("SYMPTOMS LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
-                                sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,self.FONTSIZE)),
+                                sg.Input(key="SYMPTOMS",font=(self.TEXTFONT,self.FONTSIZE),size=(30,1)),
                                 sg.Text("TIME LIST:",font=(self.TEXTFONT,self.FONTSIZE)),
-                                sg.Input(key="TIMES",font=(self.TEXTFONT,self.FONTSIZE))
+                                sg.Input(key="TIMES",font=(self.TEXTFONT,self.FONTSIZE),size=(30,1))
                                 ],
                             [sg.Text("TEMPERATURE IN C:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="TEMPERATURE",font=(self.TEXTFONT,self.FONTSIZE))],
                             [
                                 sg.Text("MEDICATION GIVEN:",font=(self.TEXTFONT,self.FONTSIZE)),sg.Input(key="MEDICATION",font=(self.TEXTFONT,self.FONTSIZE)),
-                                ]
+                                sg.Checkbox('ALIVE',key="ALIVE",default=True,size=(16,2),background_color=("#1b1b1b")),
+                                ],
                             ]),
 
                         sg.Column(
@@ -174,7 +175,7 @@ class CSVManager(object):
         else:
             if values["NEW ROW"]==True:
                 with open(self.CSVFILE, 'a') as csvfile:
-                    data["MORTALITY"]="ALIVE"
+                    data["MORTALITY"]="ALIVE" if values["ALIVE"]==True else "DEAD"
                     w = csv.DictWriter(csvfile, data.keys())
                     if csvfile.tell() == 0:
                         w.writeheader()
@@ -189,7 +190,7 @@ class CSVManager(object):
                                 if field is not "MORTALITY":
                                     datalist[i][field]=values[field]
                                 else:
-                                    datalist[i][field]="ALIVE"
+                                    datalist[i][field]="ALIVE" if values["ALIVE"]==True else "DEAD"
                     self.write_list_od_to_csv(datalist)
                 else:
                     sg.popup("No row(s) selected!")
@@ -250,8 +251,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
                 )
             ]
         ]
-
-    window = sg.Window("Data Enterer", layout,resizeable=True).finalize()
+    window = sg.Window("Data Enterer", layout,resizable=True).finalize()
     window.Maximize()
 
     while True: #Main event loop.
