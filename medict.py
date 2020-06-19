@@ -7,14 +7,6 @@ except ModuleNotFoundError:
 
 from csvmanager import CSVManager
 
-def get_screen_size():
-    tempwindow=sg.Window("Medict", [[]],resizable=True,finalize=True)
-    tempwindow.Maximize()
-    size=tempwindow.size
-    tempwindow.close()
-    del tempwindow
-    return size
-
 if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
@@ -40,7 +32,8 @@ if __name__=="__main__":
             ]
         ]
 
-    window = sg.Window("Medict", layout,resizable=False,finalize=True,size=get_screen_size())
+    window = sg.Window("Medict", layout,resizable=True,finalize=True)
+    window.maximize()
     window["tab"].expand(True,True,True)
 
     while True: #Main event loop.
