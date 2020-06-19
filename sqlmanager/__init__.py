@@ -1,1 +1,0 @@
-from .sqlview import SQLManager
