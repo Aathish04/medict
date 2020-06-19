@@ -19,7 +19,7 @@ if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
-    csvmanager=CSVManager(FONTSIZE=15)
+    csvmanager=CSVManager()
 
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
