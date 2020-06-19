@@ -252,6 +252,7 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
             ]
         ]
     window = sg.Window("Data Enterer", layout,resizable=True).finalize()
+    window["tab"].expand(True,True,True)
     window.Maximize()
 
     while True: #Main event loop.
