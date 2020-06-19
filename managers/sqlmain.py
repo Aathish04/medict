@@ -7,10 +7,13 @@ import json
 import mysql.connector as ms
 from os import path
 
-from constants import mySqlDatabase,mySqlPassword,mySqlHost,mySqlUsername,SQLTableName
+mySqlHost='localhost'
+mySqlUsername='root'
+mySqlDatabase = 'hospital'
+mySqlPassword = 'password21'
+SQLTableName='patients'
 
-
-def parseCSV(fp):
+def parseCSV(fp): #Why can't you use CSVManager.list_od_from_csv for this?
     '''Parse csv file in `fp` and convert to lists'''
     rowsList=[]
     with open(fp,'r',encoding='utf-8') as data:
