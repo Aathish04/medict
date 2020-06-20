@@ -135,6 +135,38 @@ def write_database(columnNames,rows):
             cursor.execute(SQLStatement)
         con.commit()
 
+def update_row(patientid,fields_to_change,updated_data):
+    '''This updates a specific row in a SQL table with specific patientid.
+    Parameters
+    ----------
+    patientid -> int
+    fields_to_change -> List or Tuple
+    updated_data -> List or Tuple
+
+    Raises
+    ------
+    ValueError -> When length of `fields_to_change` and `updated_data` doesn't match
+    Norows affected
+
+    Returns
+    -------
+    None
+    '''
+    intialise_dataBase()
+    SQLStatement = "UPDATE "+SQLTableName+" SET "
+    if len(fields_to_change)==len(updated_data):
+        for field,data in zip(fields_to_change,updated_data):
+            SQLStatement+=str(field)+"="+"'%s'"%data+', '
+    else:
+        raise ValueError("Looks like fields_to_change and updated_data doesn't have equal values.")
+    SQLStatement=SQLStatement[:-2] #remove last comma and space
+    SQLStatement+=' WHERE patientid=%s'%patientid+';'
+    cursor.execute(SQLStatement)
+    if cursor.rowcount == 0:
+        print("There is no Rows affected Please Check Your Parameters")
+    else:
+        con.commit()
+
 if __name__== '__main__':
     '''This is to test some functions'''
     csvmanager=CSVManager()
@@ -142,3 +174,4 @@ if __name__== '__main__':
     print(write_database(tuple(csvmanager.FIELDS),tuple(a)))
     print(sql_to_list())
     print(show_table_rows())
+    update_row(20,['GENDER'],['FEMALE'])
