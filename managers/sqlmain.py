@@ -23,7 +23,9 @@ def parseCSV(fp): #Why can't you use CSVManager.list_od_from_csv for this?
     return rowsList
 
 def is_num(var):
-    '''Check whether the `var` is a number or not using actual conversion'''
+    '''Some checking of value of data written in SQL database and converting it'''
+    if var == "null": #Check whether it is null
+        return True
     try:
         var=int(var)
         return True
@@ -112,8 +114,8 @@ def write_database(columnNames,rows):
     sympIndex=columnNames.index('SYMPTOMS')
     timesIndex=columnNames.index('TIMES')
     for row in rows[1:]: #1st row in columnName
-        row[sympIndex]=json.dumps([row[sympIndex]])
-        row[timesIndex]=json.dumps([row[timesIndex]])
+        row[sympIndex]="null" if row[sympIndex]=="UNKNOWN" else json.dumps([row[sympIndex]])
+        row[timesIndex]="null" if row[timesIndex]=="UNKNOWN" else json.dumps([row[timesIndex]])
         SQLStatement="INSERT INTO %s("%SQLTableName
         for i in range(len(columnNames)):
             if i!=len(columnNames)-1:
@@ -122,6 +124,8 @@ def write_database(columnNames,rows):
                 SQLStatement+=columnNames[i]+')'
         SQLStatement+=" VALUES("
         for i in range(len(row)):
+            if row[i] == "UNKNOWN": #Make it to null in SQL instead of saving it as is as it cause errors.
+                row[i]="null"
             if i!=(len(row)-1) and is_num(row[i]):
                 SQLStatement+=row[i]+','
             elif i!=(len(row)-1) and (not is_num(row[i])):
