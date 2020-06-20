@@ -125,15 +125,18 @@ class CSVManager(object):
                     ] for row in csv_reader
                 ]
 
-    def list_od_from_csv(self):
+    def list_od_from_csv(self,datafile=None):
         """Returns a list of ordered dictionaries that map each field to its value
         for each row in the CSV file.
 
         Returns:
+            datafile[str]: The path to the csv file.
             list[OrderedDictionary]: List containing the ordered dictionaries that
                                     map the field to their values, for each row.
         """
-        with open(self.CSVFILE, "r") as csvfile:
+        if datafile is None:
+            datafile=self.CSVFILE
+        with open(datafile, "r") as csvfile:
             data=csv.DictReader(csvfile)
             datalist=[d for d in data]
         return datalist
