@@ -5,7 +5,7 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
-from csvmanager import CSVManager
+from managers import CSVManager
 
 if __name__=="__main__":
     sg.theme('DarkTanBlue')

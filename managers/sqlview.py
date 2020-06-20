@@ -3,7 +3,7 @@
 
 import os
 import PySimpleGUI as sg
-import sqlmain as parsesql
+from . import sqlmain as parsesql
 
 class SQLManager(object):
     CSVFILE=os.path.join("..","data.csv")
