@@ -1,3 +1,6 @@
+import sys
+
 from .csvmanager import CSVManager
 
-from .sqlview import SQLManager
+if sys.platform != "darwin":
+    from .sqlview import SQLManager
