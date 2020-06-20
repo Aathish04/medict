@@ -32,7 +32,7 @@ class SQLManager(object):
                 sg.Column(
                     [
                         [sg.Button(button_text="COMPARE WITH CSV",button_color=("white","blue"),size=(18,1))],
-                        [sg.Button(button_text="RELOADSQL",button_color=("black","WHITE"),size=(16,1))],
+                        [sg.Button(button_text="RELOAD",key="RELOADSQL",button_color=("black","WHITE"),size=(16,1))],
                         ],
                         justification="center",
                     element_justification="center"),

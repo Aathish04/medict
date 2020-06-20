@@ -26,7 +26,7 @@ if __name__=="__main__":
                             "CSV Spreadsheet",csvmanager.spread_layout,
                             element_justification='center'
                             ),
-                        
+
                         sg.Tab(
                             "SQL Layout",sqlmanager.spread_layout,
                             element_justification='center'
@@ -65,6 +65,7 @@ if __name__=="__main__":
 
         elif event=="RELOAD":
             csvmanager.table.update(values=csvmanager.records_from_csv())
+
         elif event == "RELOADSQL":
             sqlmanager.reload_table()
 
