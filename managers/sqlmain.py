@@ -6,7 +6,7 @@ import json
 import mysql.connector as ms
 from os import path
 
-from csvmanager import CSVManager
+from .csvmanager import CSVManager
 
 mySqlHost='localhost'
 mySqlUsername='root'
