@@ -141,7 +141,7 @@ class CSVManager(object):
             datalist=[d for d in data]
         return datalist
 
-    def write_list_od_to_csv(self,list_of_ordered_dicts):
+    def write_list_od_to_csv(self,list_of_ordered_dicts,datafile=None):
         """Writes a list of ordered dictionaries that maps each field to its value
         for a single row, to the CSV file.
 
@@ -150,7 +150,9 @@ class CSVManager(object):
                             ordered dictionaries that map each field to its value.
 
         """
-        with open(self.CSVFILE,"w") as csvfile:
+        if datafile is None:
+            datafile=self.CSVFILE
+        with open(datafile,"w") as csvfile:
             writer=csv.DictWriter(csvfile,fieldnames=self.FIELDS,extrasaction="ignore")
             writer.writeheader()
             writer.writerows(list_of_ordered_dicts)
