@@ -2,10 +2,11 @@
 as well as write it to a MySql Database'''
 
 #necessary imports
-import csv
 import json
 import mysql.connector as ms
 from os import path
+
+from csvmanager import CSVManager
 
 mySqlHost='localhost'
 mySqlUsername='root'
@@ -13,14 +14,6 @@ mySqlDatabase = 'hospital'
 mySqlPassword = 'password21'
 SQLTableName='patients'
 
-def parseCSV(fp): #Why can't you use CSVManager.list_od_from_csv for this?
-    '''Parse csv file in `fp` and convert to lists'''
-    rowsList=[]
-    with open(fp,'r',encoding='utf-8') as data:
-        reader = csv.reader(data,dialect='excel')
-        for rows in reader: #as first row in heading
-            rowsList.append(rows)
-    return rowsList
 
 def is_num(var):
     '''Some checking of value of data written in SQL database and converting it'''
@@ -57,7 +50,7 @@ def checkTableExists(tablename='patients'):
 
 def sql_to_list():
     '''Converts things in sql database to lists which contain rows as tuples
-    Eg. 
+    Eg.
     [
         (1, 51, 'MALE', '["FEVER, CHEST TIGHTNESS, DYSPNEA"]', '["8, 8, 8"]', Decimal('38.90'), 'ANTI-INFLAMMATORY', None)
         (2, 20, 'FEMALE', '["DYSPNEA, DRY COUGH, FEVER"]', '["5, 5, 5"]', Decimal('38.50'), 'SELF:PARACETAMOL, AMOXILLIN', None)
@@ -103,7 +96,7 @@ def show_table_rows():
     cursor.execute("DESC %s"%SQLTableName)
     desc = cursor.fetchall()
     return [i[0] for i in desc]
-    
+
 def write_database(columnNames,rows):
     '''Write into MySql table name as specified.
     columnNames -> List
@@ -113,7 +106,7 @@ def write_database(columnNames,rows):
     intialise_dataBase()
     sympIndex=columnNames.index('SYMPTOMS')
     timesIndex=columnNames.index('TIMES')
-    for row in rows[1:]: #1st row in columnName
+    for row in rows:
         row[sympIndex]="null" if row[sympIndex]=="UNKNOWN" else json.dumps([row[sympIndex]])
         row[timesIndex]="null" if row[timesIndex]=="UNKNOWN" else json.dumps([row[timesIndex]])
         SQLStatement="INSERT INTO %s("%SQLTableName
@@ -144,7 +137,8 @@ def write_database(columnNames,rows):
 
 if __name__== '__main__':
     '''This is to test some functions'''
-    a=parseCSV(path.join("..","data.csv"))
-    print(write_database(tuple(a[0]),tuple(a)))
+    csvmanager=CSVManager()
+    a=csvmanager.records_from_csv()
+    print(write_database(tuple(csvmanager.FIELDS),tuple(a)))
     print(sql_to_list())
     print(show_table_rows())
