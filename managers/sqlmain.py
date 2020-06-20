@@ -2,7 +2,6 @@
 as well as write it to a MySql Database'''
 
 #necessary imports
-import csv
 import json
 import mysql.connector as ms
 from os import path
