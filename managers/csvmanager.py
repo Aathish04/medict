@@ -129,8 +129,10 @@ class CSVManager(object):
         """Returns a list of ordered dictionaries that map each field to its value
         for each row in the CSV file.
 
+        Args:
+            datafile (str,optional): The path to the csv file. Defaults to None but
+            is self.CSVFILE if None.
         Returns:
-            datafile[str]: The path to the csv file.
             list[OrderedDictionary]: List containing the ordered dictionaries that
                                     map the field to their values, for each row.
         """
