@@ -6,13 +6,14 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
 from managers import CSVManager
+from managers import SQLManager
 
 if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
     csvmanager=CSVManager()
-
+    sqlmanager = SQLManager()
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
@@ -24,7 +25,12 @@ if __name__=="__main__":
                         sg.Tab(
                             "CSV Spreadsheet",csvmanager.spread_layout,
                             element_justification='center'
-                            )
+                            ),
+
+                        sg.Tab(
+                            "SQL Layout",sqlmanager.spread_layout,
+                            element_justification='center'
+                        )
                         ]
                     ],
                 enable_events=True,key="tab"
@@ -45,6 +51,7 @@ if __name__=="__main__":
         elif event=="tab":
             csvmanager.clear_data(locals())
             csvmanager.reload_table()
+            sqlmanager.reload_table()
 
         elif event=="csvtable": #Table is clicked etc.
             row=csvmanager.table.SelectedRows[-1]
@@ -58,6 +65,9 @@ if __name__=="__main__":
 
         elif event=="RELOAD":
             csvmanager.table.update(values=csvmanager.records_from_csv())
+
+        elif event == "RELOADSQL":
+            sqlmanager.reload_table()
 
         elif event=="CLEAR FILLED":
             csvmanager.clear_data(locals())
