@@ -109,15 +109,20 @@ class CSVManager(object):
             if key in self.FIELDS:
                 window[key]('')
 
-    def records_from_csv(self):
+    def records_from_csv(self,datafile=None):
         """Returns a list of (list of entries for each field)
         for each row of the CSV file.
 
+        Args:
+            datafile (str,optional): The path to the csv file. Defaults to None but
+            is self.CSVFILE if None.
         Returns:
             list of lists: The outer list holds each row, the inner list holds
                             each value in that row for each field.
         """
-        with open(self.CSVFILE,'r') as csvfile:
+        if datafile is None:
+            datafile=self.CSVFILE
+        with open(datafile,'r') as csvfile:
             csv_reader = csv.DictReader(csvfile)
             return [
                 [
