@@ -5,13 +5,14 @@ as well as write it to a MySql Database'''
 import json
 import mysql.connector as ms
 from os import path
+import sys #Just for MacOS testing.
 
 if __name__=="__main__":
     from csvmanager import CSVManager
 else:
     from .csvmanager import CSVManager
 
-mySqlHost='localhost'
+mySqlHost="localhost" if sys.platform!="darwin" else '192.168.0.107' #just for MacOS testing
 mySqlUsername='root'
 mySqlDatabase = 'hospital'
 mySqlPassword = 'password21'
@@ -172,7 +173,7 @@ def update_row(patientid,fields_to_change,updated_data):
 
 if __name__== '__main__':
     '''This is to test some functions'''
-    csvmanager=CSVManager()
+    csvmanager=CSVManager(CSVFILE=path.abspath(__file__ + "/../../data.csv"))
     a=csvmanager.records_from_csv()
     print(write_database(tuple(csvmanager.FIELDS),tuple(a)))
     print(sql_to_list())
