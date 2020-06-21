@@ -1,2 +1,3 @@
-pysimplegui
-mysql.connector
+pysimplegui # For the user interface.
+mysql.connector # For connecting to the MySQL server
+numpy # Used by the ML algorithms.
