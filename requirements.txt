@@ -1,3 +1,3 @@
 pysimplegui # For the user interface.
 mysql.connector # For connecting to the MySQL server
-numpy # Used by the ML algorithms.
+tensorflow # Used to build the Machine Learning system.
