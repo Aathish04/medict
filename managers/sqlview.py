@@ -12,7 +12,17 @@ else:
     from .csvmanager import CSVManager
 
 class SQLManager(object):
-    def __init__(self,TEXTFONT="serif",FONTSIZE=15,NUM_ROWS=20):
+    def __init__(self,
+            TEXTFONT="serif",
+            FONTSIZE=15,
+            NUM_ROWS=20,
+            mySqlHost="localhost",
+            mySqlUsername='root',
+            mySqlDatabase = 'hospital',
+            mySqlPassword = 'password21',
+            SQLTableName='patients',
+            SQLTableCreationPath = path.join('..','database.sql')
+            ):
         """Initialises the SQL Manager.
 
         Args:
@@ -21,12 +31,12 @@ class SQLManager(object):
             NUM_ROWS (int, optional): The number of rows to display in the Table. Defaults to 20
         """
         #MySQL Configuration Starts
-        self.mySqlHost="localhost"
-        self.mySqlUsername='root'
-        self.mySqlDatabase = 'hospital'
-        self.mySqlPassword = 'password21'
-        self.SQLTableName='patients'
-        self.SQLTableCreationPath = path.join('..','database.sql')
+        self.mySqlHost=mySqlHost
+        self.mySqlUsername=mySqlUsername
+        self.mySqlDatabase = mySqlDatabase
+        self.mySqlPassword = mySqlPassword
+        self.SQLTableName=SQLTableName
+        self.SQLTableCreationPath = SQLTableCreationPath
         #MySQl Configuration ends
         self.TEXTFONT=TEXTFONT
         self.FONTSIZE=FONTSIZE
