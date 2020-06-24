@@ -148,6 +148,85 @@ class CSVManager(object):
             datalist=[d for d in data]
         return datalist
 
+    def typed_list_od_from_csv(self):
+        """Converts the String data of the CSV to list, int, float, whatevs.
+
+        Returns:
+            list: List of ordered dictionaries.
+        """
+        data=self.list_od_from_csv()
+        for i in range(len(data)):
+            data[i]["AGE"]=int(data[i]["AGE"])
+            data[i]["SYMPTOMS"]= ["UNKNOWN"] if data[i]["SYMPTOMS"] == "UNKNOWN" else data[i]["SYMPTOMS"].split(",")
+            data[i]["TIMES"]=["UNKNOWN"] if data[i]["TIMES"] == "UNKNOWN" else [int(time) for time in data[i]["TIMES"].split(",")]
+            data[i]["TEMPERATURE"]=["UNKNOWN"] if data[i]["TEMPERATURE"] == "UNKNOWN" else float(data[i]["TEMPERATURE"])
+            data[i]["MEDICATION"]=["UNKNOWN"] if data[i]["MEDICATION"] == "UNKNOWN" else data[i]["MEDICATION"].split(",")
+        return data
+
+    def unique_symptoms(self):
+        """Returns all the unique symptoms experienced by all the patients.
+
+        Returns:
+            list: List of strings of the names of the symptoms
+        """
+        unique_symptoms=[]
+        for entry in self.typed_list_od_from_csv():
+            symptoms=entry["SYMPTOMS"]
+            for symptom in symptoms:
+                if symptom not in unique_symptoms and symptom!="UNKNOWN":
+                    unique_symptoms.append(symptom)
+        return unique_symptoms
+
+    def unique_medications(self):
+        """Returns all the unique medicines used by all the patients.
+
+        Returns:
+            list: List of strings of the names of the medicines
+        """
+        unique_medications=[]
+        for entry in self.typed_list_od_from_csv():
+            medications=entry["MEDICATION"]
+            for medication in medications:
+                if medication not in unique_medications and medication!="UNKNOWN":
+                    unique_medications.append(medication)
+        return unique_medications
+
+    def expanded_dataset(self):
+        """Returns a list of ordered dictionaries of the details of the patient
+        creating entries for all medications, symptoms etc. The value for each symptom
+        is the number of days the patient had the symptom, and the for medication, it is
+        1 if they used it, 0 if not.
+
+        Returns:
+            list: list of ordered dictionaries.
+        """
+        data=self.typed_list_od_from_csv()
+        unique_symptoms=self.unique_symptoms()
+        unique_medications=self.unique_medications()
+        for record in data:
+            if record["TEMPERATURE"]==["UNKNOWN"]:
+                record["TEMPERATURE"]=None
+            for i in range(len(unique_symptoms)):
+                if unique_symptoms[i] in record["SYMPTOMS"]:
+                    if len(record["TIMES"])==1:
+                        if record["TIMES"][0]!="UNKNOWN":
+                            record[unique_symptoms[i]]=record["TIMES"][0]
+                        else:
+                            record[unique_symptoms[i]]=None
+                    else:
+                        record[unique_symptoms[i]] = record["TIMES"][record["SYMPTOMS"].index(unique_symptoms[i])]
+                else:
+                    record[unique_symptoms[i]]=0
+            for i in range(len(unique_medications)):
+                if unique_medications[i] in record["MEDICATION"]:
+                    record[unique_medications[i]]=1
+                else:
+                    record[unique_medications[i]]=0
+            del record["SYMPTOMS"]
+            del record["TIMES"]
+            del record["MEDICATION"]
+        return data
+
     def write_list_od_to_csv(self,list_of_ordered_dicts,datafile=None):
         """Writes a list of ordered dictionaries that maps each field to its value
         for a single row, to the CSV file.
