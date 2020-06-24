@@ -1,4 +1,5 @@
 import os
+import sys
 import csv
 try:
     import PySimpleGUI as sg
@@ -13,7 +14,10 @@ if __name__=="__main__":
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
     csvmanager=CSVManager()
-    sqlmanager = SQLManager()
+    if sys.platform=="darwin": # This "if" is just for MacOS testing.
+        sqlmanager = SQLManager(mySqlHost="192.168.0.107")  #It will be removed
+    else:   # as soon as everything else is finished.
+        sqlmanager = SQLManager() # so don't remove it before that.
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
