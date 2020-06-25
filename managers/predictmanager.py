@@ -1,4 +1,4 @@
-from os import path
+from os import path,remove
 import numpy as np
 import pandas as pd
 
@@ -83,3 +83,4 @@ model.fit(train_ds,
           epochs=55)
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
+remove(expanded_csv_path)
