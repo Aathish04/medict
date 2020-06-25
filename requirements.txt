@@ -1,4 +1,4 @@
 pysimplegui # For the user interface.
 mysql.connector # For connecting to the MySQL server.
 tensorflow # Used to build the Machine Learning system.
-# pandas #To format the data properly.
+pandas #To format the data properly.
