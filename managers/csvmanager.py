@@ -205,14 +205,14 @@ class CSVManager(object):
         unique_medications=self.unique_medications()
         for record in data:
             if record["TEMPERATURE"]==["UNKNOWN"]:
-                record["TEMPERATURE"]="UNKNOWN"
+                record["TEMPERATURE"]=37
             for i in range(len(unique_symptoms)):
                 if unique_symptoms[i] in record["SYMPTOMS"]:
                     if len(record["TIMES"])==1:
                         if record["TIMES"][0]!="UNKNOWN":
                             record[unique_symptoms[i]]=record["TIMES"][0]
                         else:
-                            record[unique_symptoms[i]]="UNKNOWN"
+                            record[unique_symptoms[i]]=0
                     else:
                         record[unique_symptoms[i]] = record["TIMES"][record["SYMPTOMS"].index(unique_symptoms[i])]
                 else:
