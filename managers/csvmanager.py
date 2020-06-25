@@ -222,6 +222,7 @@ class CSVManager(object):
                     record[unique_medications[i]]=1
                 else:
                     record[unique_medications[i]]=0
+            record["MORTALITY"] = 1 if record["MORTALITY"]=="ALIVE" else 0
             del record["SYMPTOMS"]
             del record["TIMES"]
             del record["MEDICATION"]
