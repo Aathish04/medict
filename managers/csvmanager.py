@@ -205,14 +205,14 @@ class CSVManager(object):
         unique_medications=self.unique_medications()
         for record in data:
             if record["TEMPERATURE"]==["UNKNOWN"]:
-                record["TEMPERATURE"]=None
+                record["TEMPERATURE"]="UNKNOWN"
             for i in range(len(unique_symptoms)):
                 if unique_symptoms[i] in record["SYMPTOMS"]:
                     if len(record["TIMES"])==1:
                         if record["TIMES"][0]!="UNKNOWN":
                             record[unique_symptoms[i]]=record["TIMES"][0]
                         else:
-                            record[unique_symptoms[i]]=None
+                            record[unique_symptoms[i]]="UNKNOWN"
                     else:
                         record[unique_symptoms[i]] = record["TIMES"][record["SYMPTOMS"].index(unique_symptoms[i])]
                 else:
@@ -239,7 +239,8 @@ class CSVManager(object):
         if datafile is None:
             datafile=self.CSVFILE
         with open(datafile,"w") as csvfile:
-            writer=csv.DictWriter(csvfile,fieldnames=self.FIELDS,extrasaction="ignore")
+            fields=list(list_of_ordered_dicts[0].keys())
+            writer=csv.DictWriter(csvfile,fieldnames=fields,extrasaction="ignore")
             writer.writeheader()
             writer.writerows(list_of_ordered_dicts)
 
