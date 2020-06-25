@@ -15,17 +15,11 @@ else:
 
 csvmanager=CSVManager(CSVFILE=path.abspath(__file__ + "/../../data.csv"))
 expanded_dataset=csvmanager.expanded_dataset()
-expanded_csv_path=path.abspath(__file__ + "/../expandeddata.csv")
-csvmanager.write_list_od_to_csv(expanded_dataset,datafile=expanded_csv_path)
 
-dataframe=pd.read_csv(expanded_csv_path)
+dataframe=pd.DataFrame(expanded_dataset)
 dataframe.columns = dataframe.columns.str.strip().str.replace(' ', '-').str.replace('(', '').str.replace(')', '')
 train, test = train_test_split(dataframe, test_size=0.2)
 train, val = train_test_split(train, test_size=0.2)
-
-print(len(train), 'train examples')
-print(len(val), 'validation examples')
-print(len(test), 'test examples')
 
 def df_to_dataset(dataframe, shuffle=True, batch_size=55):
     dataframe = dataframe.copy()
@@ -36,18 +30,10 @@ def df_to_dataset(dataframe, shuffle=True, batch_size=55):
     ds = ds.batch(batch_size)
     return ds
 
-batch_size = 55
+batch_size = len(csvmanager.records_from_csv())
 train_ds = df_to_dataset(train, batch_size=batch_size)
 val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
 test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
-
-
-for feature_batch, label_batch in train_ds.take(1):
-    print('Every feature:', list(feature_batch.keys()))
-    print('A batch of ages:', feature_batch['AGE'])
-    print('A batch of targets:', label_batch )
-
-example_batch = next(iter(train_ds))[0]
 
 feature_columns=[feature_column.indicator_column(feature_column.categorical_column_with_vocabulary_list('GENDER', ['MALE', 'FEMALE']))]
 
@@ -80,9 +66,8 @@ model.compile(optimizer='adam',
 model.fit(train_ds,
           validation_data=val_ds,
           epochs=55)
+
 loss, accuracy = model.evaluate(test_ds)
-print("Accuracy", accuracy)
-remove(expanded_csv_path)
 
 predictions = model.predict(test_ds)
 
