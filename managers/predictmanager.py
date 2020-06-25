@@ -27,7 +27,6 @@ print(len(train), 'train examples')
 print(len(val), 'validation examples')
 print(len(test), 'test examples')
 
-
 def df_to_dataset(dataframe, shuffle=True, batch_size=55):
     dataframe = dataframe.copy()
     labels = dataframe.pop('MORTALITY')
@@ -84,3 +83,13 @@ model.fit(train_ds,
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
 remove(expanded_csv_path)
+
+predictions = model.predict(test_ds)
+
+# Show some results
+print(list(test_ds)[0][1][:10])
+for prediction, survived in zip(predictions[:10], list(test_ds)[0][1][:10]):
+  prediction = tf.sigmoid(prediction).numpy()
+  print("Predicted survival: {:.2%}".format(prediction[0]),
+        " | Actual outcome: ",
+        ("SURVIVED" if bool(survived) else "DIED"))
