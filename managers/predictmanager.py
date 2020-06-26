@@ -22,6 +22,7 @@ class Predictor(object):
             ds = ds.shuffle(buffer_size=len(dataframe))
         ds = ds.batch(batch_size)
         return ds
+
     def __init__(self):
         csvmanager=CSVManager(CSVFILE=path.abspath(__file__ + "/../../data.csv"))
         expanded_dataset=csvmanager.expanded_dataset()
@@ -44,7 +45,6 @@ class Predictor(object):
         train_ds = self.df_to_dataset(train, batch_size=batch_size)
         val_ds = self.df_to_dataset(val, shuffle=False, batch_size=batch_size)
         test_ds = self.df_to_dataset(test, shuffle=False, batch_size=batch_size)
-
         feature_columns=[feature_column.indicator_column(feature_column.categorical_column_with_vocabulary_list('GENDER', ['MALE', 'FEMALE']))]
 
         NUMERIC_FEATURES = ['AGE','TEMPERATURE',"FEVER","CHEST-TIGHTNESS","DYSPNEA",
@@ -82,16 +82,14 @@ class Predictor(object):
     def predict(self, lod):
         dataframe=pd.DataFrame(lod)
         dataframe.columns = dataframe.columns.str.strip().str.replace(' ', '-').str.replace('(', '').str.replace(')', '')
-        test_ds = self.df_to_dataset(dataframe, batch_size=len(lod))
-        predictions = self.model.predict(test_ds)
-        for prediction, survived in zip(predictions[:10], list(test_ds)[0][1][:10]):
+        input_dataset = self.df_to_dataset(dataframe, batch_size=len(lod))
+        predictions = self.model.predict(input_dataset)
+        for prediction in predictions:
             prediction = tf.sigmoid(prediction).numpy()
-            print("Predicted survival: {:.2%}".format(prediction[0]),
-                    " | Actual outcome: ",
-                    ("SURVIVED" if bool(survived) else "DIED"))
+            return prediction
 
 
 if __name__=="__main__":
     predictor=Predictor()
     csvmanager=CSVManager(CSVFILE=path.abspath(__file__ + "/../../data.csv"))
-    predictor.predict(csvmanager.expanded_dataset())
+    print("Survival Rate: ",predictor.predict(csvmanager.expanded_dataset()[:1]))
