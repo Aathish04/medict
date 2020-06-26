@@ -87,6 +87,7 @@ class CSVManager(object):
                     )
                 ]
             ]
+
         self.table=self.spread_layout[0][0]
         self.table.StartingRowNumber=1
         self.table.RowHeaderText="ID"
@@ -191,7 +192,7 @@ class CSVManager(object):
                     unique_medications.append(medication)
         return unique_medications
 
-    def expanded_dataset(self):
+    def expanded_dataset(self,lod=None):
         """Returns a list of ordered dictionaries of the details of the patient
         creating entries for all medications, symptoms etc. The value for each symptom
         is the number of days the patient had the symptom, and the for medication, it is
@@ -200,7 +201,10 @@ class CSVManager(object):
         Returns:
             list: list of ordered dictionaries.
         """
-        data=self.typed_list_od_from_csv()
+        if lod==None:
+            data=self.typed_list_od_from_csv()
+        else:
+            data=lod
         unique_symptoms=self.unique_symptoms()
         unique_medications=self.unique_medications()
         for record in data:
@@ -222,7 +226,8 @@ class CSVManager(object):
                     record[unique_medications[i]]=1
                 else:
                     record[unique_medications[i]]=0
-            record["MORTALITY"] = 1 if record["MORTALITY"]=="ALIVE" else 0
+            if lod==None:
+                record["MORTALITY"] = 1 if record["MORTALITY"]=="ALIVE" else 0
             del record["SYMPTOMS"]
             del record["TIMES"]
             del record["MEDICATION"]
