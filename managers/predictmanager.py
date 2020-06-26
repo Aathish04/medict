@@ -1,7 +1,7 @@
 from os import path,remove
 import numpy as np
 import pandas as pd
-
+import PySimpleGUI as sg
 import tensorflow as tf
 
 from tensorflow import feature_column
@@ -14,6 +14,33 @@ else:
     from .csvmanager import CSVManager
 
 class Predictor(object):
+    TEXTFONT="serif"
+    FONTSIZE=14
+    FIELDS=[]
+    FIELDS=["mAGE","mGENDER","mSYMPTOMS","mTIMES","mTEMPERATURE","mMEDICATION"]
+    layout=[
+        [
+            sg.Frame(
+                "Data",[
+                [sg.Text("AGE:",font=(TEXTFONT,FONTSIZE)), sg.Input(key="mAGE",font=(TEXTFONT,FONTSIZE))],
+                [sg.Text("GENDER:",font=(TEXTFONT,FONTSIZE)),sg.Input(key="mGENDER",font=(TEXTFONT,FONTSIZE))],
+                [
+                    sg.Text("SYMPTOMS LIST:",font=(TEXTFONT,FONTSIZE)),
+                    sg.Input(key="mSYMPTOMS",font=(TEXTFONT,FONTSIZE),size=(30,1)),
+                    sg.Text("TIME LIST:",font=(TEXTFONT,FONTSIZE)),
+                    sg.Input(key="mTIMES",font=(TEXTFONT,FONTSIZE),size=(30,1))
+                    ],
+                [sg.Text("TEMPERATURE IN C:",font=(TEXTFONT,FONTSIZE)),sg.Input(key="mTEMPERATURE",font=(TEXTFONT,FONTSIZE))],
+                [
+                    sg.Text("MEDICATION GIVEN:",font=(TEXTFONT,FONTSIZE)),sg.Input(key="mMEDICATION",font=(TEXTFONT,FONTSIZE)),
+                    ],
+                [sg.Text("SURVIVAL RATE:",font=(TEXTFONT,FONTSIZE)),sg.Text("                    ",key="mMORTALITY",font=(TEXTFONT,FONTSIZE)),
+                sg.Text(" %",font=(TEXTFONT,FONTSIZE))],
+                [sg.Button("ESTIMATE")]
+                ]),
+            ]
+        ]
+
     def df_to_dataset(self,dataframe, shuffle=True, batch_size=55):
         dataframe = dataframe.copy()
         labels = dataframe.pop('MORTALITY')
@@ -31,15 +58,6 @@ class Predictor(object):
         dataframe.columns = dataframe.columns.str.strip().str.replace(' ', '-').str.replace('(', '').str.replace(')', '')
         train, test = train_test_split(dataframe, test_size=0.2)
         train, val = train_test_split(train, test_size=0.2)
-
-        def df_to_dataset(self,dataframe, shuffle=True, batch_size=55):
-            dataframe = dataframe.copy()
-            labels = dataframe.pop('MORTALITY')
-            ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
-            if shuffle:
-                ds = ds.shuffle(buffer_size=len(dataframe))
-            ds = ds.batch(batch_size)
-            return ds
 
         batch_size = len(csvmanager.records_from_csv())
         train_ds = self.df_to_dataset(train, batch_size=batch_size)
@@ -63,15 +81,15 @@ class Predictor(object):
         feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
 
         self.model = tf.keras.Sequential([
-        feature_layer,
-        layers.Dense(128, activation='relu'),
-        layers.Dense(128, activation='relu'),
-        layers.Dense(1)
+            feature_layer,
+            layers.Dense(128, activation='relu'),
+            layers.Dense(128, activation='relu'),
+            layers.Dense(1)
         ])
 
         self.model.compile(optimizer='adam',
-                    loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-                    metrics=['accuracy'])
+            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            metrics=['accuracy'])
 
         self.model.fit(train_ds,
                 validation_data=val_ds,
@@ -87,7 +105,6 @@ class Predictor(object):
         for prediction in predictions:
             prediction = tf.sigmoid(prediction).numpy()
             return prediction
-
 
 if __name__=="__main__":
     predictor=Predictor()
