@@ -1,19 +1,23 @@
 import os
+import sys
 import csv
 try:
     import PySimpleGUI as sg
 except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
-from managers import CSVManager
-from managers import SQLManager
+from managers import CSVManager,SQLManager,Predictor
 
 if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
     csvmanager=CSVManager()
-    sqlmanager = SQLManager()
+    predictor=Predictor()
+    if sys.platform=="darwin": # This "if" is just for MacOS testing.
+        sqlmanager = SQLManager(mySqlHost="192.168.0.107")  #It will be removed
+    else:   # as soon as everything else is finished.
+        sqlmanager = SQLManager() # so don't remove it before that.
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
@@ -29,6 +33,10 @@ if __name__=="__main__":
 
                         sg.Tab(
                             "SQL Layout",sqlmanager.spread_layout,
+                            element_justification='center'
+                        ),
+                        sg.Tab(
+                            "Predictor",predictor.layout,
                             element_justification='center'
                         )
                         ]
@@ -78,6 +86,33 @@ if __name__=="__main__":
         elif event == "DELETE ALL ROWS":
             csvmanager.delete_all_rows()
 
+        elif event == "ESTIMATE":
+            data={
+            field:values[field] for field in values if field in predictor.FIELDS
+            }
+            if not all(data.values()):
+                sg.popup(csvmanager.UNFILLED_DATA_ERROR)
+            else:
+                data=[data]
+                for i in range(len(data)):
+                    data[i]["AGE"]=int(data[i]["mAGE"])
+                    data[i]["GENDER"]=data[i]["mGENDER"]
+                    data[i]["SYMPTOMS"]= ["UNKNOWN"] if data[i]["mSYMPTOMS"] == "UNKNOWN" else data[i]["mSYMPTOMS"].split(",")
+                    data[i]["TIMES"]=["UNKNOWN"] if data[i]["mTIMES"] == "UNKNOWN" else [int(time) for time in data[i]["mTIMES"].split(",")]
+                    data[i]["TEMPERATURE"]=["UNKNOWN"] if data[i]["mTEMPERATURE"] == "UNKNOWN" else float(data[i]["mTEMPERATURE"])
+                    data[i]["MEDICATION"]=["UNKNOWN"] if data[i]["mMEDICATION"] == "UNKNOWN" else data[i]["mMEDICATION"].split(",")
+                    data[i]["MORTALITY"]=1
+
+                del data[i]["mAGE"]
+                del data[i]["mGENDER"]
+                del data[i]["mSYMPTOMS"]
+                del data[i]["mTIMES"]
+                del data[i]["mTEMPERATURE"]
+                del data[i]["mMEDICATION"]
+
+                data=csvmanager.expanded_dataset(data)
+                prediction=predictor.predict(data)
+                window['mMORTALITY'].update(str(prediction[0]*100))
         else:
             print(event)
 
