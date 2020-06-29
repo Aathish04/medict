@@ -65,15 +65,7 @@ class Predictor(object):
         test_ds = self.df_to_dataset(test, shuffle=False, batch_size=batch_size)
         feature_columns=[feature_column.indicator_column(feature_column.categorical_column_with_vocabulary_list('GENDER', ['MALE', 'FEMALE']))]
 
-        NUMERIC_FEATURES = ['AGE','TEMPERATURE',"FEVER","CHEST-TIGHTNESS","DYSPNEA",
-        "COUGH","CHEST-PAIN","DIARRHEA","FLU","HYPERPYREXIA","HEADACHE",
-        "BODY-WEAKNESS","APIRETIC","WHEEZING","HYPERPYROXIA","ASTHENIA",
-        "VOMIT","APYRETIC","PARACETAMOL","AMOXICILLIN","MULTI-DRUG-THERAPY",
-        "O2-THERAPY","INTUBATION","CPAP-THERAPY","ANTIVIRALS","LEVOFLOXACIN",
-        "LACTIC-FERMENTS","TOCILIZUMAB","CORTISONE","CEPHALOSPORIN","EBPM",
-        "LEVOXACIN","ACCLOVIRN","CHOLECALCIFOREL","PLAQUENIL","RITONAVIR-THERAPY",
-        "HYDROXYCHLOROQUINE","CORTICOSTEROID","ALENOLOL","AZITHROMYCIN","ZITROMAX",
-        "TACHIPIRINE","ANTIBIOTICS","TAZIOCINBIS"]
+        NUMERIC_FEATURES = [feature for feature in dataframe.columns if feature not in ["GENDER", "MORTALITY"]]
 
         for header in NUMERIC_FEATURES:
             feature_columns.append(feature_column.numeric_column(header))
