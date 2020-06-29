@@ -95,16 +95,14 @@ if __name__=="__main__":
             else:
                 data=[data]
                 for i in range(len(data)):
-                    data[i]["AGE"]=int(data[i]["mAGE"])
-                    data[i]["GENDER"]=data[i]["mGENDER"]
+                    data[i]["AGE"]=int(data[i].pop("mAGE"))
+                    data[i]["GENDER"]=data[i].pop("mGENDER")
                     data[i]["SYMPTOMS"]= ["UNKNOWN"] if data[i]["mSYMPTOMS"] == "UNKNOWN" else data[i]["mSYMPTOMS"].split(",")
                     data[i]["TIMES"]=["UNKNOWN"] if data[i]["mTIMES"] == "UNKNOWN" else [int(time) for time in data[i]["mTIMES"].split(",")]
                     data[i]["TEMPERATURE"]=["UNKNOWN"] if data[i]["mTEMPERATURE"] == "UNKNOWN" else float(data[i]["mTEMPERATURE"])
                     data[i]["MEDICATION"]=["UNKNOWN"] if data[i]["mMEDICATION"] == "UNKNOWN" else data[i]["mMEDICATION"].split(",")
-                    data[i]["MORTALITY"]=1
+                    data[i]["MORTALITY"]=0 #This is just a value in order to keep the size of the data array the same.
 
-                del data[i]["mAGE"]
-                del data[i]["mGENDER"]
                 del data[i]["mSYMPTOMS"]
                 del data[i]["mTIMES"]
                 del data[i]["mTEMPERATURE"]
