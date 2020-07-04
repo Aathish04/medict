@@ -36,7 +36,7 @@ class Predictor(object):
                     ],
                 [sg.Text("SURVIVAL RATE:",font=(TEXTFONT,FONTSIZE)),sg.Text("                    ",key="mMORTALITY",font=(TEXTFONT,FONTSIZE)),
                 sg.Text(" %",font=(TEXTFONT,FONTSIZE))],
-                [sg.Button("ESTIMATE")]
+                [sg.Button("ESTIMATE"),sg.Button("RETRAIN")]
                 ]),
             ]
         ]
@@ -50,8 +50,8 @@ class Predictor(object):
         ds = ds.batch(batch_size)
         return ds
 
-    def __init__(self):
-        csvmanager=CSVManager(CSVFILE=path.abspath(__file__ + "/../../data.csv"))
+    def __init__(self,csvfile=path.abspath(__file__ + "/../../data.csv")):
+        csvmanager=CSVManager(CSVFILE=csvfile)
         expanded_dataset=csvmanager.expanded_dataset()
 
         dataframe=pd.DataFrame(expanded_dataset)
@@ -88,6 +88,9 @@ class Predictor(object):
                 epochs=55)
 
         loss, accuracy = self.model.evaluate(test_ds)
+
+    def retrain(self,csvfile=path.abspath(__file__ + "/../../data.csv")):
+        self.__init__(csvfile=csvfile)
 
     def predict(self, lod):
         dataframe=pd.DataFrame(lod)

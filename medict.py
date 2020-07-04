@@ -111,6 +111,8 @@ if __name__=="__main__":
                 data=csvmanager.expanded_dataset(data)
                 prediction=predictor.predict(data)
                 window['mMORTALITY'].update(str(prediction[0]*100))
+        elif event=="RETRAIN":
+            predictor.retrain()
         else:
             print(event)
 
