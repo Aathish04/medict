@@ -14,10 +14,7 @@ if __name__=="__main__":
 
     csvmanager=CSVManager()
     predictor=Predictor()
-    if sys.platform=="darwin": # This "if" is just for MacOS testing.
-        sqlmanager = SQLManager(mySqlHost="192.168.0.107")  #It will be removed
-    else:   # as soon as everything else is finished.
-        sqlmanager = SQLManager() # so don't remove it before that.
+    sqlmanager = SQLManager()
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
@@ -93,26 +90,21 @@ if __name__=="__main__":
             if not all(data.values()):
                 sg.popup(csvmanager.UNFILLED_DATA_ERROR)
             else:
-                data=[data]
-                for i in range(len(data)):
-                    data[i]["AGE"]=int(data[i].pop("mAGE"))
-                    data[i]["GENDER"]=data[i].pop("mGENDER")
-                    data[i]["SYMPTOMS"]= ["UNKNOWN"] if data[i]["mSYMPTOMS"] == "UNKNOWN" else data[i]["mSYMPTOMS"].split(",")
-                    data[i]["TIMES"]=["UNKNOWN"] if data[i]["mTIMES"] == "UNKNOWN" else [int(time) for time in data[i]["mTIMES"].split(",")]
-                    data[i]["TEMPERATURE"]=["UNKNOWN"] if data[i]["mTEMPERATURE"] == "UNKNOWN" else float(data[i]["mTEMPERATURE"])
-                    data[i]["MEDICATION"]=["UNKNOWN"] if data[i]["mMEDICATION"] == "UNKNOWN" else data[i]["mMEDICATION"].split(",")
-                    data[i]["MORTALITY"]=0 #This is just a value in order to keep the size of the data array the same.
+                data["AGE"]=int(data.pop("pAGE"))
+                data["GENDER"]=data.pop("pGENDER")
+                data["SYMPTOMS"] = ["UNKNOWN"] if data["pSYMPTOMS"] == "UNKNOWN" else data["pSYMPTOMS"].split(",")
+                data["TIMES"]=["UNKNOWN"] if data["pTIMES"] == "UNKNOWN" else [int(time) for time in data["pTIMES"].split(",")]
+                data["TEMPERATURE"]=["UNKNOWN"] if data["pTEMPERATURE"] == "UNKNOWN" else float(data["pTEMPERATURE"])
+                data["MEDICATION"]=["UNKNOWN"] if data["pMEDICATION"] == "UNKNOWN" else data["pMEDICATION"].split(",")
 
-                del data[i]["mSYMPTOMS"]
-                del data[i]["mTIMES"]
-                del data[i]["mTEMPERATURE"]
-                del data[i]["mMEDICATION"]
+                del data["pSYMPTOMS"]
+                del data["pTIMES"]
+                del data["pTEMPERATURE"]
+                del data["pMEDICATION"]
 
-                data=csvmanager.expanded_dataset(data)
-                prediction=predictor.predict(data)
-                window['mMORTALITY'].update(str(prediction[0]*100))
-        elif event=="RETRAIN":
-            predictor.retrain()
+                data=csvmanager.expanded_dataset([data])[0] #expanded_dataset returns a list. In this case, only one element is in the list.
+                prediction=predictor.predict(data,allowed_deviation=values["DEVIANCE"])
+                window['pMORTALITY'].update(str(prediction))
         else:
             print(event)
 
