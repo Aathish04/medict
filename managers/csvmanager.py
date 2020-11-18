@@ -244,7 +244,7 @@ class CSVManager(object):
         """
         if datafile is None:
             datafile=self.CSVFILE
-        with open(datafile,"w") as csvfile:
+        with open(datafile,"w",newline="") as csvfile:
             fields=list(list_of_ordered_dicts[0].keys())
             writer=csv.DictWriter(csvfile,fieldnames=fields,extrasaction="ignore")
             writer.writeheader()

@@ -1,4 +1,5 @@
-"""This file contain the elements of PySimpleGui which can be imported when creating final GUI.
+"""This file contain the elements of PySimpleGui which can be imported
+when creating final GUI.
 """
 
 import PySimpleGUI as sg
@@ -10,7 +11,7 @@ if __name__ == "__main__":
     from csvmanager import CSVManager
 else:
     from .csvmanager import CSVManager
-
+from ._config import get_sql_config
 
 class SQLManager(object):
     def __init__(
@@ -18,11 +19,6 @@ class SQLManager(object):
         TEXTFONT="serif",
         FONTSIZE=15,
         NUM_ROWS=20,
-        mySqlHost="localhost",
-        mySqlUsername="root",
-        mySqlDatabase="hospital",
-        mySqlPassword="password21",
-        SQLTableName="patients",
         SQLTableCreationPath=path.join("..", "database.sql"),
     ):
         """Initialises the SQL Manager.
@@ -33,11 +29,12 @@ class SQLManager(object):
             NUM_ROWS (int, optional): The number of rows to display in the Table. Defaults to 20
         """
         # MySQL Configuration Starts
-        self.mySqlHost = mySqlHost
-        self.mySqlUsername = mySqlUsername
-        self.mySqlDatabase = mySqlDatabase
-        self.mySqlPassword = mySqlPassword
-        self.SQLTableName = SQLTableName
+        sql_config = get_sql_config()
+        self.mySqlHost = sql_config["host"]
+        self.mySqlUsername = sql_config["username"]
+        self.mySqlDatabase = sql_config["database"]
+        self.mySqlPassword = sql_config["password"]
+        self.SQLTableName = sql_config["table_name"]
         self.SQLTableCreationPath = SQLTableCreationPath
         # MySQl Configuration ends
         self.TEXTFONT = TEXTFONT
