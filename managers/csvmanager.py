@@ -92,20 +92,20 @@ class CSVManager(object):
         self.table.StartingRowNumber=1
         self.table.RowHeaderText="ID"
 
-    def clear_data(self, local_variables=None):
+    def clear_data(self, values = None, window = None):
         """Clears all the unpushed data filled in the form.
 
         Args:
-            local_variables (dict, optional): Pass locals() here iff you are
-            importing CSVManager from another file. This is so it can access
-            the local namespace of that file. Defaults to None.
+            values (dict, optional): The PySimpleGUI values dictionary from
+            where the submitted values must be extracted. Pass this if, and
+            only if you are importing this from another file.
+
+            window (PySimpleGUI.window, optional): Pass the PySimpleGUI window
+            object here if and only if you are importing this file from another
+            main program. This is so this function can modify that screen.
         """
-        if __name__!="__main__":
-            values=local_variables["values"]
-            window=local_variables["window"]
-        else:
-            values=globals()["values"]
-            window=globals()["window"]
+        values=globals()["values"] if values is None else values
+        window=globals()["window"] if window is None else window
         for key in values.keys():
             if key in self.FIELDS:
                 window[key]('')
@@ -250,20 +250,17 @@ class CSVManager(object):
             writer.writeheader()
             writer.writerows(list_of_ordered_dicts)
 
-    def submit_filled(self, local_variables=None):
+    def submit_filled(self, values=None):
         """Submits the data filled in the form by writing it to the CSV file.
         If the NEW ROW checkbox has been unchecked, it edits the currently
         selected row instead of adding a new row.
 
         Args:
-            local_variables (dict, optional): Pass locals() here iff you are
-            importing CSVManager from another file. This is so it can access
-            the local namespace of that file. Defaults to None.
+            values (dict, optional): The PySimpleGUI values dictionary from
+            where the submitted values must be extracted. Pass this if, and
+            only if you are importing this from another file.
         """
-        if __name__ !="__main__":
-            values=local_variables["values"]
-        else:
-            values=globals()["values"]
+        values=globals()["values"] if values is None else values
 
         data={
             field:values[field] for field in values if field in self.FIELDS[:-1]
@@ -285,14 +282,14 @@ class CSVManager(object):
                     for i in range(len(datalist)):
                         if i in self.table.SelectedRows:
                             for field in self.FIELDS:
-                                if field is not "MORTALITY":
+                                if field != "MORTALITY":
                                     datalist[i][field]=values[field]
                                 else:
                                     datalist[i][field]="ALIVE" if values["ALIVE"]==True else "DEAD"
                     self.write_list_od_to_csv(datalist)
                 else:
                     sg.popup("No row(s) selected!")
-        self.clear_data(local_variables)
+        sg.popup("Submitted!")
         self.reload_table()
 
     def reload_table(self):
@@ -360,7 +357,6 @@ if __name__=="__main__": #For if you want to run this standalone to edit quickly
             break
 
         elif event=="tab":
-            csvmanager.clear_data()
             csvmanager.reload_table()
 
         elif event=="csvtable": #Table is clicked etc.

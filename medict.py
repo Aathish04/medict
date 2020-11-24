@@ -5,7 +5,7 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
-from managers import CSVManager,SQLManager,Predictor
+from managers import CSVManager,Predictor,SQLManager
 
 if __name__=="__main__":
     sg.theme('DarkTanBlue')
@@ -53,7 +53,7 @@ if __name__=="__main__":
             break
 
         elif event=="tab":
-            csvmanager.clear_data(locals())
+            csvmanager.clear_data(values,window)
             csvmanager.reload_table()
             sqlmanager.reload_table()
 
@@ -65,7 +65,7 @@ if __name__=="__main__":
                     window[key](csvmanager.table.get()[row][i-1])
 
         elif event=="SUBMIT":
-            csvmanager.submit_filled(locals())
+            csvmanager.submit_filled(values)
 
         elif event=="RELOAD":
             csvmanager.table.update(values=csvmanager.records_from_csv())
@@ -74,7 +74,7 @@ if __name__=="__main__":
             sqlmanager.reload_table()
 
         elif event=="CLEAR FILLED":
-            csvmanager.clear_data(locals())
+            csvmanager.clear_data(values,window)
 
         elif event=="DELETE ROWS":
             csvmanager.delete_selected_rows()
