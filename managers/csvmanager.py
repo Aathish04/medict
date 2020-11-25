@@ -19,7 +19,7 @@ class CSVManager(object):
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self,TEXTFONT="serif",FONTSIZE=14,NUM_ROWS=20,CSVFILE="data.csv"):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=14,NUM_ROWS=20,CSVFILE=__file__+os.sep+os.pardir+os.sep+os.pardir+os.sep+"data.csv"):
         """Initialises the CSV Manager.
             Good fontsizes are [12,21]
         Args:
