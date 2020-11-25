@@ -5,7 +5,7 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
-from managers import CSVManager,Predictor,SQLManager
+from managers import CSVManager,Predictor,BarGraphManager,SQLManager
 
 if __name__=="__main__":
     sg.theme('DarkTanBlue')
@@ -14,6 +14,7 @@ if __name__=="__main__":
     csvmanager=CSVManager()
     predictor=Predictor()
     sqlmanager = SQLManager()
+    bargraphman=BarGraphManager()
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
@@ -33,6 +34,10 @@ if __name__=="__main__":
                         ),
                         sg.Tab(
                             "Predictor",predictor.layout,
+                            element_justification='center'
+                        ),
+                        sg.Tab(
+                            "Graphs",bargraphman.layout,
                             element_justification='center'
                         )
                         ]
@@ -56,6 +61,7 @@ if __name__=="__main__":
             csvmanager.clear_data(values,window)
             csvmanager.reload_table()
             sqlmanager.reload_table()
+            fig_photo = bargraphman.draw_figure(window['-CANVAS-'].TKCanvas,bargraphman.fig)
 
         elif event=="csvtable": #Table is clicked etc.
             row=csvmanager.table.SelectedRows[-1]

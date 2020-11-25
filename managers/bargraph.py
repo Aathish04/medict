@@ -1,14 +1,13 @@
-from csvmanager import CSVManager
+if __name__=="__main__":
+    from csvmanager import CSVManager
+else:
+    from .csvmanager import CSVManager
 import PySimpleGUI as sg
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import matplotlib.pyplot as plt
-def draw_figure(canvas, figure, loc=(0, 0)):
-    figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
-    figure_canvas_agg.draw()
-    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
-    return figure_canvas_agg
+
 class BarGraphManager:
     
     def __init__(self):
@@ -18,6 +17,12 @@ class BarGraphManager:
         self.ages=[]
         for entry in dataset:
            self.ages.append(int(entry["AGE"]))
+        self.fig=self.bar_graph()
+    def draw_figure(self,canvas, figure, loc=(0, 0)):
+        figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
+        figure_canvas_agg.draw()
+        figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
+        return figure_canvas_agg
     def bar_graph(self):
        
         for i in range(len(self.ages)):
@@ -55,23 +60,15 @@ class BarGraphManager:
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
 
-        layout = [[sg.Text('BAR GRAPH', font='Any 18')],
+        self.layout = [[sg.Text('BAR GRAPH', font='Any 18')],
                   [sg.Canvas(size=(figure_w, figure_h), key='-CANVAS-')],
                   [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
-
-        window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',
-            layout, force_toplevel=True, finalize=True)
-
-
-        fig_photo = draw_figure(window['-CANVAS-'].TKCanvas, fig)
-
-
-        event, values = window.read()
-
-        window.close()    
-            
+        return fig
     
 
-
-a=BarGraphManager()
-a.bar_graph()
+if __name__=="__main__":
+    a=BarGraphManager()
+    window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',a.layout, force_toplevel=True, finalize=True)
+    fig_photo = a.draw_figure(window['-CANVAS-'].TKCanvas,a.fig)
+    event, values = window.read()
+    window.close()    
