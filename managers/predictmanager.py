@@ -1,5 +1,5 @@
 from os import path
-from math import prod
+from functools import reduce
 
 import PySimpleGUI as sg
 
@@ -78,7 +78,7 @@ class Predictor(object):
                         prob_dict[key] += 1
         for key in prob_dict:
             prob_dict[key] = prob_dict[key]/count_dict[key] if prob_dict[key] !=0 else 1
-        return prod(prob_dict.values())*100
+        return (reduce(lambda x, y: x * y, prob_dict.values() )*100)
 
 if __name__=="__main__":
     predictor=Predictor()
