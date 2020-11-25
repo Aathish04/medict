@@ -81,6 +81,8 @@ if __name__=="__main__":
 
         elif event == "DELETE ALL ROWS":
             csvmanager.delete_all_rows()
+        elif event=="WRITEDB":
+            sqlmanager.write_database(tuple(csvmanager.FIELDS),tuple(csvmanager.records_from_csv()))
 
         elif event == "ESTIMATE":
             data={
