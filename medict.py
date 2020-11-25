@@ -5,16 +5,17 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("The PySimpleGUI module needs to be installed.")
 
-from managers import CSVManager,Predictor,BarGraphManager,SQLManager
+from managers import CSVManager,ThemeManager,Predictor,BarGraphManager,SQLManager,get_settings_config
 
 if __name__=="__main__":
-    sg.theme('DarkTanBlue')
+    sg.theme(get_settings_config()["theme"])
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
     csvmanager=CSVManager()
     predictor=Predictor()
     sqlmanager = SQLManager()
     bargraphman=BarGraphManager()
+    thememanager=ThemeManager()
     info_layout=[[sg.Text(csvmanager.INSTRUCTIONS,font=(csvmanager.TEXTFONT,12))]]
     layout=[ # Main Window layout
         [
@@ -39,7 +40,11 @@ if __name__=="__main__":
                         sg.Tab(
                             "Graphs",bargraphman.layout,
                             element_justification='center'
-                        )
+                        ),
+                        sg.Tab(
+                            "Settings",thememanager.layout,
+                            element_justification='center'
+                        )    
                         ]
                     ],
                 enable_events=True,key="tab"
@@ -76,6 +81,10 @@ if __name__=="__main__":
         elif event=="RELOAD":
             csvmanager.table.update(values=csvmanager.records_from_csv())
 
+        elif event=="THEMEBTN":
+            thememanager.set_theme(values['THEMELIST'][0])
+            sg.popup_ok("Restart")
+            
         elif event == "RELOADSQL":
             sqlmanager.reload_table()
 

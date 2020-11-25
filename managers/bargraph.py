@@ -27,7 +27,7 @@ class BarGraphManager:
        
         for i in range(len(self.ages)):
             a=self.ages[i]
-            print(a)
+            
             if a>=1 and a<=20:
                 self.v1+=1
             elif a>=21 and a<=40:
@@ -50,11 +50,6 @@ class BarGraphManager:
         plt.yticks(np.arange(0, 31, 5))
         plt.legend((p1[0],), ('AGE LIMIT',))
 
-
-
-
-
-        sg.theme('Light Brown 3')
 
         fig = plt.gcf() 
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds

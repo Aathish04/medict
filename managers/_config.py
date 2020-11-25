@@ -11,6 +11,7 @@
     See https://docs.python.org/3/library/configparser.html?highlight=configparser#supported-ini-file-structure
     for how to actually set it up.
 """
+import os
 import configparser
 from pathlib import Path
 
@@ -33,3 +34,15 @@ def get_ftp_config():
     dictionaries.
     """
     return config["ftp"]
+
+def get_settings_config():
+    """Returns the Configuration of ''settings'' section
+    These configuration it returns can be accessed as 
+    dictionaries.
+    """
+    return config["settings"]
+
+def set_settings_config(d):
+    config['settings']['theme']=d['theme']
+    with open(__file__ + os.sep + os.pardir + os.sep + os.pardir + os.sep+ "medict.cfg", 'w') as configfile:
+       config.write(configfile)
