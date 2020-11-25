@@ -19,7 +19,7 @@ class SQLManager(object):
         TEXTFONT="serif",
         FONTSIZE=15,
         NUM_ROWS=20,
-        SQLTableCreationPath=path.join("..", "database.sql"),
+        SQLTableCreationPath=path.join("database.sql"),
     ):
         """Initialises the SQL Manager.
 
@@ -77,6 +77,14 @@ class SQLManager(object):
                                 button_text="RELOAD",
                                 key="RELOADSQL",
                                 button_color=("black", "WHITE"),
+                                size=(16, 1),
+                            )
+                        ],
+                 [
+                            sg.Button(
+                                button_text="WRITE DB",
+                                key="WRITEDB",
+                                button_color=("green", "WHITE"),
                                 size=(16, 1),
                             )
                         ],
