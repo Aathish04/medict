@@ -13,6 +13,7 @@ from managers import (
     BarGraphManager,
     SQLManager,
     get_settings_config,
+    FontManager,
 )
 
 if __name__ == "__main__":
@@ -24,6 +25,7 @@ if __name__ == "__main__":
     sqlmanager = SQLManager()
     bargraphman = BarGraphManager()
     thememanager = ThemeManager()
+    fontmanager=FontManager()
     info_layout = [[sg.Text(csvmanager.INSTRUCTIONS, font=(csvmanager.TEXTFONT, 12))]]
     layout = [  # Main Window layout
         [
@@ -51,7 +53,7 @@ if __name__ == "__main__":
                         ),
                         sg.Tab(
                             "Settings",
-                            thememanager.layout,
+                            [*thememanager.layout,*fontmanager.layout],
                             element_justification="center",
                         ),
                     ]
@@ -96,13 +98,14 @@ if __name__ == "__main__":
         elif event == "THEMEBTN":
             thememanager.set_theme(values["THEMELIST"][0])
             sg.popup_ok("Restart")
-
+        elif event=="FONTSPIN":
+            fontmanager.set_fontsize(values["FONTSPIN"])
+            window['FONTSPIN'].update(values["FONTSPIN"])
         elif event == "RELOADSQL":
             sqlmanager.reload_table()
 
         elif event == "CLEAR FILLED":
             csvmanager.clear_data(values, window)
-
         elif event == "DELETE ROWS":
             csvmanager.delete_selected_rows()
 

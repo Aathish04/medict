@@ -4,6 +4,11 @@ import os
 import csv
 import PySimpleGUI as sg
 
+if __name__ == "__main__":
+    from _config import get_settings_config
+else:
+    from ._config import get_settings_config
+    
 class CSVManager(object):
 
     INSTRUCTIONS="""The SYMPTOMS LIST and TIME LIST entries must be \
@@ -19,7 +24,7 @@ class CSVManager(object):
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
-    def __init__(self,TEXTFONT="serif",FONTSIZE=14,NUM_ROWS=20,CSVFILE=__file__+os.sep+os.pardir+os.sep+os.pardir+os.sep+"data.csv"):
+    def __init__(self,TEXTFONT="serif",FONTSIZE=get_settings_config()["fontsize"],NUM_ROWS=20,CSVFILE=__file__+os.sep+os.pardir+os.sep+os.pardir+os.sep+"data.csv"):
         """Initialises the CSV Manager.
             Good fontsizes are [12,21]
         Args:

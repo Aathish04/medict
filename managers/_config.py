@@ -46,6 +46,10 @@ def get_settings_config():
 
 
 def set_settings_config(d):
-    config["settings"]["theme"] = d["theme"]
+    if "theme" in d.keys():
+         config["settings"]["theme"] = d["theme"] 
+    elif "fontsize" in d.keys():
+         print(d["fontsize"])
+         config["settings"]["fontsize"] = d["fontsize"] 
     with open(cfg_file, "w") as configfile:
         config.write(configfile)

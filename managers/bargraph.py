@@ -1,7 +1,9 @@
 if __name__=="__main__":
     from csvmanager import CSVManager
+    from _config import get_settings_config
 else:
     from .csvmanager import CSVManager
+    from ._config import get_settings_config
 import PySimpleGUI as sg
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -55,7 +57,7 @@ class BarGraphManager:
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
 
-        self.layout = [[sg.Text('BAR GRAPH', font='Any 18')],
+        self.layout = [[sg.Text('BAR GRAPH', font="serif "+get_settings_config()["fontsize"])],
                   [sg.Canvas(size=(figure_w, figure_h), key='-CANVAS-')],
                   [sg.OK(pad=((figure_w / 2, 0), 3), size=(4, 2))]]
         return fig

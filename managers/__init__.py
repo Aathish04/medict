@@ -11,3 +11,5 @@ from .bargraph import BarGraphManager
 from ._config import *
 
 from .theme import ThemeManager
+
+from .fontmanager import FontManager

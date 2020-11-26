@@ -10,17 +10,18 @@ import PySimpleGUI as sg
 
 if __name__ == "__main__":
     from csvmanager import CSVManager
-    from _config import get_sql_config
+    from _config import get_sql_config,get_settings_config
+    
 else:
     from .csvmanager import CSVManager
-    from ._config import get_sql_config
+    from ._config import get_sql_config,get_settings_config
 
 
 class SQLManager(object):
     def __init__(
         self,
         TEXTFONT="serif",
-        FONTSIZE=15,
+        FONTSIZE=get_settings_config()["fontsize"],
         NUM_ROWS=20,
         SQLTableCreationPath=path.join("database.sql"),
     ):
