@@ -2,16 +2,19 @@
 when creating final GUI.
 """
 
-import PySimpleGUI as sg
 import json
+from os import chdir, path
+
 import mysql.connector as ms
-from os import path, chdir
+import PySimpleGUI as sg
 
 if __name__ == "__main__":
     from csvmanager import CSVManager
+    from _config import get_sql_config
 else:
     from .csvmanager import CSVManager
-from ._config import get_sql_config
+    from ._config import get_sql_config
+
 
 class SQLManager(object):
     def __init__(
@@ -80,7 +83,7 @@ class SQLManager(object):
                                 size=(16, 1),
                             )
                         ],
-                 [
+                        [
                             sg.Button(
                                 button_text="WRITE DB",
                                 key="WRITEDB",
@@ -99,8 +102,7 @@ class SQLManager(object):
         self.table.RowHeaderText = "ID"
 
     def reload_table(self):
-        """Reloads the table by reading the Database and updating as necessary.
-        """
+        """Reloads the table by reading the Database and updating as necessary."""
         self.table.update(values=self.sql_to_list())
 
     def is_num(self, var):
