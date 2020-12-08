@@ -25,7 +25,7 @@ if __name__ == "__main__":
     sqlmanager = SQLManager()
     bargraphman = BarGraphManager()
     thememanager = ThemeManager()
-    fontmanager=FontManager()
+    fontmanager = FontManager()
     info_layout = [[sg.Text(csvmanager.INSTRUCTIONS, font=(csvmanager.TEXTFONT, 12))]]
     layout = [  # Main Window layout
         [
@@ -49,11 +49,13 @@ if __name__ == "__main__":
                             element_justification="center",
                         ),
                         sg.Tab(
-                            "Graphs", bargraphman.layout, element_justification="center"
+                            "Graphs",
+                            bargraphman.layout,
+                            element_justification="center",
                         ),
                         sg.Tab(
                             "Settings",
-                            [*thememanager.layout,*fontmanager.layout],
+                            [*thememanager.layout, *fontmanager.layout],
                             element_justification="center",
                         ),
                     ]
@@ -78,10 +80,22 @@ if __name__ == "__main__":
             csvmanager.clear_data(values, window)
             csvmanager.reload_table()
             sqlmanager.reload_table()
-            fig_photo = bargraphman.draw_figure(
-                window["-CANVAS-"].TKCanvas, bargraphman.fig
-            )
-
+            
+        elif event == "bargraph_tab":
+            with open('some.txt','w') as f:
+                f.write(str(values))
+            window["-CANVAS-"].TKCanvas.delete("all")
+            window["-GENDER_CANVAS-"].TKCanvas.delete("all")
+            if values['bargraph_tab'] == 'age-vs-case':
+                
+                fig_photo = bargraphman.draw_figure(
+                    window["-CANVAS-"].TKCanvas, bargraphman.fig
+                )
+            if values['bargraph_tab'] =='case-vs-gender':
+                
+                bargraphman.draw_figure(
+                     window["-GENDER_CANVAS-"].TKCanvas, bargraphman.fig1
+                )
         elif event == "csvtable":  # Table is clicked etc.
             row = csvmanager.table.SelectedRows[-1]
             for i in range(len(values.keys())):
@@ -98,9 +112,9 @@ if __name__ == "__main__":
         elif event == "THEMEBTN":
             thememanager.set_theme(values["THEMELIST"][0])
             sg.popup_ok("Restart")
-        elif event=="FONTSPIN":
+        elif event == "FONTSPIN":
             fontmanager.set_fontsize(values["FONTSPIN"])
-            window['FONTSPIN'].update(values["FONTSPIN"])
+            window["FONTSPIN"].update(values["FONTSPIN"])
         elif event == "RELOADSQL":
             sqlmanager.reload_table()
 
