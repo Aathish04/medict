@@ -1,15 +1,17 @@
+import tkinter as Tk
+
+import matplotlib as mpl
+import matplotlib.backends.tkagg as tkagg
+import numpy as np
+import PySimpleGUI as sg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 if __name__ == "__main__":
     from _config import get_settings_config
     from csvmanager import CSVManager
 else:
-    from .csvmanager import CSVManager
     from ._config import get_settings_config
-
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import numpy as np
-import PySimpleGUI as sg
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+    from .csvmanager import CSVManager
 
 
 class BarGraphManager:
@@ -48,10 +50,22 @@ class BarGraphManager:
         ]
 
     def draw_figure(self, canvas, figure, loc=(0, 0)):
-        figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
+        """Draw a matplotlib figure onto a Tk canvas
+
+        loc: location of top-left corner of figure on canvas in pixels.
+
+        """
+        canvas.pack()
+        figure_canvas_agg = FigureCanvasTkAgg(figure, master=canvas)
         figure_canvas_agg.draw()
-        figure_canvas_agg.get_tk_widget().pack(side="top", fill="both", expand=False)
-        return figure_canvas_agg
+        figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
+        figure_w, figure_h = int(figure_w), int(figure_h)
+        photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
+        canvas.create_image(loc[0] + figure_w / 2, loc[1] + figure_h / 2, image=photo)
+        tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
+        # Return a handle which contains a reference to the photo object
+        # which must be kept live or else the picture disappears
+        return photo
 
     def bar_graph_age_vs_Case(self):
         v1, v2, v3, v4, v5 = 0, 0, 0, 0, 0
@@ -69,22 +83,22 @@ class BarGraphManager:
                 v5 += 1
         values_to_plot = (v1, v2, v3, v4, v5)
         ind = np.arange(len(values_to_plot))
-        width = 0.4
-
-        p1 = plt.bar(ind, values_to_plot, width)
-
-        plt.ylabel("NO.OF.CASES")
-        plt.title("AGE VS CASES")
-        plt.xticks(ind, ("1-20", "21-40", "41-60", "61-80", "81-100"))
-        plt.yticks(np.arange(0, 31, 5))
-        plt.legend((p1[0],), ("AGE LIMIT",))
-
-        fig = plt.gcf()
-        
+        width = 0.5
+        fig = mpl.figure.Figure()
+        subplt = fig.add_subplot(1, 1, 1)
+        p1 = subplt.bar(ind, values_to_plot, width)
+        subplt.set_title(
+            "Age vs Case", fontdict={"fontsize": get_settings_config()["fontsize"]}
+        )
+        subplt.set_ylabel("NO.OF.CASES")
+        subplt.set_xlabel("AGE")
+        subplt.set_xticks(ind)
+        subplt.set_xticklabels(("1-20", "21-40", "41-60", "61-80", "81-100"))
+        subplt.set_yticks(np.arange(0, 31, 5))
+        subplt.legend((p1[0],), ("AGE LIMIT",))
+        fig.align_labels(subplt)
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-
         self.bar_graph_age_vs_Case = [
-            [sg.Text("Age vs Case", font="serif " + get_settings_config()["fontsize"])],
             [sg.Canvas(size=(figure_w, figure_h), key="-CANVAS-")],
         ]
         return fig
@@ -123,6 +137,8 @@ class BarGraphManager:
         bars2 = [f1, f2, f3, f4, f5]
         r1 = np.arange(len(bars1))
         r2 = [x + barWidth for x in r1]
+        fig = mpl.figure.Figure()
+        plt = fig.add_subplot(1, 1, 1)
         p1 = plt.bar(
             r1, bars1, color="#7f6d5f", width=barWidth, edgecolor="white", label="MALE"
         )
@@ -134,22 +150,17 @@ class BarGraphManager:
             edgecolor="white",
             label="FEMALE",
         )
-        plt.xlabel("AGE", fontweight="bold")
-        plt.xticks(
-            [r + barWidth for r in range(len(bars1))],
-            ["1-20", "21-40", "41-60", "61-80", "81-100"],
+        plt.set_title(
+            "AGE vs Gender", fontdict={"fontsize": get_settings_config()["fontsize"]}
         )
+        plt.set_xlabel("AGE")
+        plt.set_xticks([r + barWidth for r in range(len(bars1))])
+        plt.set_xticklabels(["1-20", "21-40", "41-60", "61-80", "81-100"])
         plt.legend([p1[0], p2[0]], ("Males", "Female"))
-        fig = plt.gcf()
-        #plt.show()
+
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
         self.layout_bar_graph_case_gender_wise = [
-            [
-                sg.Text(
-                    "Case Gender Wise", font="serif" + get_settings_config()["fontsize"]
-                )
-            ],
             [sg.Canvas(size=(figure_w, figure_h), key="-GENDER_CANVAS-")],
         ]
         return fig

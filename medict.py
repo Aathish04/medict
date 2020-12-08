@@ -87,15 +87,14 @@ if __name__ == "__main__":
             window["-CANVAS-"].TKCanvas.delete("all")
             window["-GENDER_CANVAS-"].TKCanvas.delete("all")
             if values['bargraph_tab'] == 'age-vs-case':
-                
                 fig_photo = bargraphman.draw_figure(
                     window["-CANVAS-"].TKCanvas, bargraphman.fig
                 )
             if values['bargraph_tab'] =='case-vs-gender':
                 
-                bargraphman.draw_figure(
+                fig_photo_keep = bargraphman.draw_figure(
                      window["-GENDER_CANVAS-"].TKCanvas, bargraphman.fig1
-                )
+                ) #assign to variable or else the graph is killed.
         elif event == "csvtable":  # Table is clicked etc.
             row = csvmanager.table.SelectedRows[-1]
             for i in range(len(values.keys())):
