@@ -80,21 +80,25 @@ if __name__ == "__main__":
             csvmanager.clear_data(values, window)
             csvmanager.reload_table()
             sqlmanager.reload_table()
-            
+
         elif event == "bargraph_tab":
-            with open('some.txt','w') as f:
-                f.write(str(values))
             window["-CANVAS-"].TKCanvas.delete("all")
             window["-GENDER_CANVAS-"].TKCanvas.delete("all")
-            if values['bargraph_tab'] == 'age-vs-case':
+            window["-MVF_CANVAS-"].TKCanvas.delete("all")
+
+            if values["bargraph_tab"] == "age-vs-case":
                 fig_photo = bargraphman.draw_figure(
                     window["-CANVAS-"].TKCanvas, bargraphman.fig
                 )
-            if values['bargraph_tab'] =='case-vs-gender':
-                
-                fig_photo_keep = bargraphman.draw_figure(
-                     window["-GENDER_CANVAS-"].TKCanvas, bargraphman.fig1
-                ) #assign to variable or else the graph is killed.
+            if values["bargraph_tab"] == "case-vs-gender":
+
+                GENDER_CANVAS = bargraphman.draw_figure(
+                    window["-GENDER_CANVAS-"].TKCanvas, bargraphman.fig1
+                )  # assign to variable or else the graph is killed.
+            if values["bargraph_tab"] == "male-vs-female":
+                mvf_graph = bargraphman.draw_figure(
+                    window["-MVF_CANVAS-"].TKCanvas, bargraphman.mvf_fig
+                )
         elif event == "csvtable":  # Table is clicked etc.
             row = csvmanager.table.SelectedRows[-1]
             for i in range(len(values.keys())):

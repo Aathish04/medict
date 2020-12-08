@@ -24,6 +24,7 @@ class BarGraphManager:
             self.ages.append(int(entry["AGE"]))
         self.fig = self.bar_graph_age_vs_Case()
         self.fig1 = self.bar_graph_case_gender_wise()
+        self.mvf_fig = self.bar_graph_m_vs_f()
         self.layout = [
             [
                 sg.TabGroup(
@@ -40,6 +41,12 @@ class BarGraphManager:
                                 self.layout_bar_graph_case_gender_wise,
                                 element_justification="center",
                                 key="case-vs-gender",
+                            ),
+                            sg.Tab(
+                                "Male VS Female",
+                                self.layout_bar_graph_mvf,
+                                element_justification="center",
+                                key="male-vs-female",
                             ),
                         ]
                     ],
@@ -162,6 +169,37 @@ class BarGraphManager:
 
         self.layout_bar_graph_case_gender_wise = [
             [sg.Canvas(size=(figure_w, figure_h), key="-GENDER_CANVAS-")],
+        ]
+        return fig
+
+    def bar_graph_m_vs_f(self):
+        list1 = self.dataset
+        m, f = 0, 0
+        for i in range(len(list1)):
+            a = list1[i]["GENDER"]
+            if a == "MALE":
+                m += 1
+            else:
+                f += 1
+        values_to_plot = (m, f)
+        ind = np.arange(len(values_to_plot))
+        width = 0.4
+        fig = mpl.figure.Figure()
+        plt = fig.add_subplot(1, 1, 1)
+
+        p1 = plt.bar(ind, values_to_plot, width)
+
+        plt.set_ylabel("NO.OF.CASES")
+        plt.set_title("MALE VS FEMALE")
+        plt.set_xticks(ind)
+        plt.set_xticklabels(("MALE", "FEMALE"))
+        plt.set_yticks(np.arange(0, len(list1) + 1, 5))
+        plt.legend((p1[0],), ("AGE LIMIT",))
+
+        figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
+
+        self.layout_bar_graph_mvf = [
+            [sg.Canvas(size=(figure_w, figure_h), key="-MVF_CANVAS-")],
         ]
         return fig
 
