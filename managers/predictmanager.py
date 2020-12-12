@@ -4,13 +4,15 @@ from functools import reduce
 import PySimpleGUI as sg
 
 if __name__=="__main__":
-    from csvmanager import CSVManager # PLS DO ALL IMPORTS SIMILARLY
+    from csvmanager import CSVManager#PLS DO ALL IMPORTS SIMILARLY
+    from _config import get_settings_config
 else:
     from .csvmanager import CSVManager
+    from ._config import get_settings_config
 
 class Predictor(object):
     TEXTFONT="serif"
-    FONTSIZE=14
+    FONTSIZE=get_settings_config()["fontsize"]
     FIELDS=[]
     FIELDS=["pAGE","pGENDER","pSYMPTOMS","pTIMES","pTEMPERATURE","pMEDICATION"]
     layout=[

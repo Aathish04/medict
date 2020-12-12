@@ -1,4 +1,4 @@
 pysimplegui # For the user interface.
 mysql.connector # For connecting to the MySQL server.
-matplotlib #for plotting
+matplotlib==2.2.5 #for plotting
 numpy==1.19.3 #windows bug https://tinyurl.com/y3dm3h86
