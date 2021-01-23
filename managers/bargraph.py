@@ -1,7 +1,6 @@
 import tkinter as Tk
 
 import matplotlib as mpl
-import matplotlib.backends.tkagg as tkagg
 import numpy as np
 import PySimpleGUI as sg
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -65,12 +64,15 @@ class BarGraphManager:
         canvas.pack()
         figure_canvas_agg = FigureCanvasTkAgg(figure, master=canvas)
         figure_canvas_agg.draw()
-        figure_x, figure_y, figure_w, figure_h = figure.bbox.bounds
+        _, _, figure_w, figure_h = figure.bbox.bounds
+        # _ can be used in places of unused variable while unpacking
         figure_w, figure_h = int(figure_w), int(figure_h)
         photo = Tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-        canvas.create_image(loc[0] + figure_w / 2, loc[1] + figure_h / 2, image=photo)
-        tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-        # Return a handle which contains a reference to the photo object
+        figure_canvas_agg._tkphoto = photo
+        canvas.create_image(loc[0] + figure_w / 2,
+                            loc[1] + figure_h / 2, image=photo)
+        figure_canvas_agg.blit()
+        # Contains a reference to the photo object
         # which must be kept live or else the picture disappears
         return photo
 
