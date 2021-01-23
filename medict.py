@@ -113,8 +113,14 @@ if __name__ == "__main__":
             csvmanager.table.update(values=csvmanager.records_from_csv())
 
         elif event == "THEMEBTN":
-            thememanager.set_theme(values["THEMELIST"][0])
-            sg.popup_ok("Restart")
+            if len(values['THEMELIST']) > 0:
+                sg.theme(values['THEMELIST'][0]) 
+                thememanager.set_theme(values["THEMELIST"][0])
+                sg.popup_ok("Restart",keep_on_top=True)
+
+        elif event == "THEMELIST":
+            sg.theme(values["THEMELIST"][0])
+            sg.popup_ok("This is {}".format(values["THEMELIST"][0]),keep_on_top=True)
         elif event == "FONTSPIN":
             fontmanager.set_fontsize(values["FONTSPIN"])
             window["FONTSPIN"].update(values["FONTSPIN"])
