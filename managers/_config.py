@@ -29,14 +29,6 @@ def get_sql_config():
     return config["sql"]
 
 
-def get_ftp_config():
-    """Returns the Configuration of ``ftp`` section
-    These configuration it returns can be accessed as
-    dictionaries.
-    """
-    return config["ftp"]
-
-
 def get_settings_config():
     """Returns the Configuration of ''settings'' section
     These configuration it returns can be accessed as

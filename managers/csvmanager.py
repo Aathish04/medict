@@ -51,16 +51,6 @@ class CSVManager(object):
             [
                 sg.Frame("Form",
                     [[
-                        sg.Column(
-                            [
-                                [sg.Button(button_text="UPLOAD TO CLOUD",button_color=("white","blue"),size=(18,1))],
-                                [sg.Button(button_text="USE CLOUD BACKUP",button_color=("blue","white"),size=(18,1))],
-                                [sg.Button(button_text="VIEW SCANS",button_color=("white","purple"),size=(18,1))],
-                                [sg.Button(button_text="ADD SCANS",button_color=("purple","white"),size=(18,1))]
-                                ],justification="left",
-
-                            element_justification="center"),
-
                         sg.Frame(
                             "Data",[
                             [sg.Text("AGE:",font=(self.TEXTFONT,self.FONTSIZE)), sg.Input(key="AGE",font=(self.TEXTFONT,self.FONTSIZE))],
