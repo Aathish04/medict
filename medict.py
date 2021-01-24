@@ -117,10 +117,9 @@ if __name__ == "__main__":
             if len(values['THEMELIST']) > 0:
                 sg.theme(values['THEMELIST'][0]) 
                 thememanager.set_theme(values["THEMELIST"][0])
-                sg.popup_ok("Restart program to see changes.",keep_on_top=True)
-            elif values["FONTSPIN"] != fontmanager.fontSize:
+            if values["FONTSPIN"] != fontmanager.fontSize:
                 fontmanager.set_fontsize(values["FONTSPIN"])
-                sg.popup_ok("Restart program to see changes.",keep_on_top=True)
+            sg.popup_ok("Restart program to see changes.",keep_on_top=True)
         elif event == "THEMELIST":
             sg.theme(values["THEMELIST"][0])
             sg.popup_ok("This is {}".format(values["THEMELIST"][0]),keep_on_top=True)
