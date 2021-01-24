@@ -30,19 +30,19 @@ class BarGraphManager:
                     [
                         [
                             sg.Tab(
-                                "Age vs Case",
+                                "Age vs Cases",
                                 self.bar_graph_age_vs_Case,
                                 element_justification="center",
                                 key="age-vs-case",
                             ),
                             sg.Tab(
-                                "Case vs Gender",
+                                "Age vs Cases by Gender",
                                 self.layout_bar_graph_case_gender_wise,
                                 element_justification="center",
                                 key="case-vs-gender",
                             ),
                             sg.Tab(
-                                "Male VS Female",
+                                "Gender vs Cases",
                                 self.layout_bar_graph_mvf,
                                 element_justification="center",
                                 key="male-vs-female",
@@ -97,7 +97,7 @@ class BarGraphManager:
         subplt = fig.add_subplot(1, 1, 1)
         p1 = subplt.bar(ind, values_to_plot, width)
         subplt.set_title(
-            "Age vs Case", fontdict={"fontsize": get_settings_config()["fontsize"]}
+            "Age vs Cases", fontdict={"fontsize": get_settings_config()["fontsize"]}
         )
         subplt.set_ylabel("NO.OF.CASES")
         subplt.set_xlabel("AGE")
@@ -160,7 +160,7 @@ class BarGraphManager:
             label="FEMALE",
         )
         plt.set_title(
-            "AGE vs Gender", fontdict={"fontsize": get_settings_config()["fontsize"]}
+            "Age vs Cases by Gender", fontdict={"fontsize": get_settings_config()["fontsize"]}
         )
         plt.set_xlabel("AGE")
         plt.set_xticks([r + barWidth for r in range(len(bars1))])
@@ -192,11 +192,10 @@ class BarGraphManager:
         p1 = plt.bar(ind, values_to_plot, width)
 
         plt.set_ylabel("NO.OF.CASES")
-        plt.set_title("MALE VS FEMALE")
+        plt.set_title("MALE vs FEMALE")
         plt.set_xticks(ind)
         plt.set_xticklabels(("MALE", "FEMALE"))
         plt.set_yticks(np.arange(0, len(list1) + 1, 5))
-        plt.legend((p1[0],), ("AGE LIMIT",))
 
         figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
 
