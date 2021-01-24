@@ -100,11 +100,12 @@ if __name__ == "__main__":
                     window["-MVF_CANVAS-"].TKCanvas, bargraphman.mvf_fig
                 )
         elif event == "csvtable":  # Table is clicked etc.
-            row = csvmanager.table.SelectedRows[-1]
-            for i in range(len(values.keys())):
-                key = list(values.keys())[i]
-                if key in list(csvmanager.FIELDS):
-                    window[key](csvmanager.table.get()[row][i - 1])
+            if len(csvmanager.table.SelectedRows) > 0:
+                row = csvmanager.table.SelectedRows[-1]
+                for i in range(len(values.keys())):
+                    key = list(values.keys())[i]
+                    if key in list(csvmanager.FIELDS):
+                        window[key](csvmanager.table.get()[row][i - 1])
 
         elif event == "SUBMIT":
             csvmanager.submit_filled(values)
@@ -116,14 +117,16 @@ if __name__ == "__main__":
             if len(values['THEMELIST']) > 0:
                 sg.theme(values['THEMELIST'][0]) 
                 thememanager.set_theme(values["THEMELIST"][0])
-                sg.popup_ok("Restart",keep_on_top=True)
-
+                sg.popup_ok("Restart program to see changes.",keep_on_top=True)
+            elif values["FONTSPIN"] != fontmanager.fontSize:
+                fontmanager.set_fontsize(values["FONTSPIN"])
+                sg.popup_ok("Restart program to see changes.",keep_on_top=True)
         elif event == "THEMELIST":
             sg.theme(values["THEMELIST"][0])
             sg.popup_ok("This is {}".format(values["THEMELIST"][0]),keep_on_top=True)
         elif event == "FONTSPIN":
-            fontmanager.set_fontsize(values["FONTSPIN"])
             window["FONTSPIN"].update(values["FONTSPIN"])
+            window["FontPreview"].update(font = "Helvetica "+str(values['FONTSPIN']))
         elif event == "RELOADSQL":
             sqlmanager.reload_table()
 

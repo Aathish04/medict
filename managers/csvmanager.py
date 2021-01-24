@@ -8,19 +8,27 @@ if __name__ == "__main__":
     from _config import get_settings_config
 else:
     from ._config import get_settings_config
-    
+
 class CSVManager(object):
 
-    INSTRUCTIONS="""The SYMPTOMS LIST and TIME LIST entries must be \
-    comma separated values that correspond with each other.
-    If the patient has severe cough for the past 2 days,\
-    the first symptom entry must be "SEVERE COUGH" and the first
-    TIME LIST entry must be "2", without quotes for both."""
+    INSTRUCTIONS=" ".join(
+        [
+            "The SYMPTOMS LIST and TIME LIST entries must be",
+            "comma separated values that correspond with each other.\n",
+            "If the patient has severe cough for the past 2 days.",
+            "the first symptom entry must be \"SEVERE COUGH\" and the first",
+            "TIME LIST entry must be \"2\", without quotes for both."
+            ]
+        )
 
     ROW_WARN="Are you ABSOLUTELY SURE you want to DELETE the selected row(s)?"
 
-    UNFILLED_DATA_ERROR="Some (or all) fields were left empty. \
-    Please use UNKNOWN as the entry if you don't know the data!"
+    UNFILLED_DATA_ERROR="\n".join(
+        [
+            "Some (or all) fields were left empty.",
+            "Please use UNKNOWN as the entry if you don't know the data!"
+            ]
+        )
 
     FIELDS=["AGE","GENDER","SYMPTOMS","TIMES","TEMPERATURE","MEDICATION","MORTALITY"]
 
