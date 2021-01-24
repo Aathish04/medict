@@ -1,3 +1,13 @@
+"""
+    ./managers/thememanager.py
+    
+    This File contains the object ThemeManager which handles all functions
+    related to setting the theme of the User Interface of the Main program
+    application.
+
+    This file may be run on its own to test the features of Predictor separately.
+"""
+
 import PySimpleGUI as sg
 
 if __name__ == "__main__":

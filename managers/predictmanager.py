@@ -1,10 +1,20 @@
+"""
+    ./managers/predictmanager.py
+
+    This File contains the object Predictor which handles all functions
+    related to predicting survival rate of a patient that may arise during
+    the usage of the main program.
+
+    This file may be run on its own to test the features of Predictor separately.
+"""
+
 from os import path
 from functools import reduce
 
 import PySimpleGUI as sg
 
 if __name__=="__main__":
-    from csvmanager import CSVManager#PLS DO ALL IMPORTS SIMILARLY
+    from csvmanager import CSVManager
     from _config import get_settings_config
 else:
     from .csvmanager import CSVManager

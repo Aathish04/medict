@@ -1,5 +1,10 @@
-"""This file contain the elements of PySimpleGui which can be imported
-when creating final GUI.
+"""
+    ./managers/sqlview.py
+    
+    This File contains the object SQLManager which handles all functions
+    related to interfacing with the SQL Database.
+
+    This file may be run on its own to test the features of SQLManager separately.
 """
 
 import json

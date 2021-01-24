@@ -1,4 +1,11 @@
-# AATHISH SIVASUBRAHMANIAN
+"""
+    ./managers/csvmanager.py
+
+    This File contains the object CSVManager, which handles all CSV file related
+    operations that may arise during the use of the main program application.
+
+    This file may be run on its own to test the features of CSVManager separately.
+"""
 
 import os
 import csv
@@ -325,7 +332,7 @@ class CSVManager(object):
                 csvfile.write(firstline)
         self.reload_table()
 
-if __name__=="__main__": #For if you want to run this standalone to edit quickly.
+if __name__=="__main__":
     sg.theme('DarkTanBlue')
     os.chdir(os.path.abspath(os.path.dirname(__file__)))
 

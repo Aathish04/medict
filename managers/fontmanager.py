@@ -1,3 +1,12 @@
+"""
+    ./managers/fontmanager.py
+
+    This File contains the object FontManager, which handles all Font Size related
+    operations that may arise during the use of the main program application.
+
+    This file may be run on its own to test the features of FontManager separately.
+"""
+
 import PySimpleGUI as sg
 if __name__=="__main__":
     from _config  import set_settings_config

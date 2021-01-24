@@ -1,4 +1,9 @@
-import sys
+"""
+    ./managers/__init__.py
+
+    This File is used to make the managers directory into a module, so that its contents,
+    CSVManager, SQLManager etc can be imported with ease.
+"""
 
 from .csvmanager import CSVManager
 

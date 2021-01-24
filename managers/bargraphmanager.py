@@ -1,3 +1,12 @@
+"""
+    ./managers/bargraphmanager.py
+
+    This File contains the object BarGraphManager, which handles all Bar Graph
+    related operations that may arise during the use of the main program application.
+
+    This file may be run on its own to test the features of BarGraphManager separately.
+"""
+
 import tkinter as Tk
 
 import matplotlib as mpl
