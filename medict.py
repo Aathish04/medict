@@ -1,3 +1,11 @@
+"""
+    ./medict.py
+
+    This is the main Python file which must be run to activate the application.
+    It makes the necessary imports and in a modular manner builds the user interface
+    for easy use.
+"""
+
 import os
 import csv
 
