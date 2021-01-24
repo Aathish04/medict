@@ -41,5 +41,3 @@ if __name__=="__main__":
         window["FontPreview"].update(font=font)
         window['FONTSPIN'].update(sz_spin)
 
-
-
