@@ -53,4 +53,4 @@ For more details, you can read the full report which is in the ProjectReports fo
 
 ## License
 
-The code for this project has been put under the MIT License. Basically, just give us credit if you copy our code, and don't get angry at us if something goes wrong when your run it, okay?
+The code for this project has been put under the MIT License. Basically, just give us credit if you copy our code, and don't get angry at us if something goes wrong when you run it, okay?
